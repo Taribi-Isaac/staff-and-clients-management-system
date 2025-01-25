@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
 
         // Create super-admin user
         $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@example.com'],
+            ['email' => 'control@raslordeckltd.com'],
             [
                 'name' => 'Super Admin',
-                'password' => bcrypt('password123'),  // Change this to a secure password
+                'password' => bcrypt('Rodsecure@2025'),  // Change this to a secure password
             ]
         );
 

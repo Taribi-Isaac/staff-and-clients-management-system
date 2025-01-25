@@ -7,6 +7,7 @@
         <!-- Form -->
         <form action="{{ route('clients.update', ['client' => $client->id]) }}" method="POST" class="bg-white p-8 rounded-lg shadow-md">
         @csrf
+        @method('POST')
 
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

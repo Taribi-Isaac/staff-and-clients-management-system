@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IssuesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StaffController;
 use App\Models\Issues;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +15,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -33,12 +35,34 @@ Route::middleware('auth')->group(function () {
     Route::post('/issues/{issue}', [IssuesController::class, 'update'])->name('issues.update');
 
 
+    Route::get('/staff/create', [StaffController::class, 'create'])->name('staff.create');
+    Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::get('/staff/{id}', [StaffController::class, 'show'])->name('staff.show');
+    Route::get('/staff/{id}/edit}', [StaffController::class, 'edit'])->name('staff.edit');
+    Route::post('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
+    Route::delete('/staff/{id}', [StaffController::class, 'destroy'])->name('staff.destroy');
+
+    Route::get('/employees/create', [EmployeesController::class, 'create'])->name('employees.create');
+    Route::post('/employees', [EmployeesController::class, 'store'])->name('employees.store');
+    Route::get('/employees', [EmployeesController::class, 'index'])->name('employees.index');
+    Route::get('/employees/{id}', [EmployeesController::class, 'show'])->name('employees.show');
+    Route::get('/employees/{id}/edit}', [EmployeesController::class, 'edit'])->name('employees.edit');
+    Route::post('/employees/{employees}', [EmployeesController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/{admin}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+
+    Route::post('/admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
+
+    Route::delete('/admin/{admin}', [AdminController::class, 'destroy'])->name('admin.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
