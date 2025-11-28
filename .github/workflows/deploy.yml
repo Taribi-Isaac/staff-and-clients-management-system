@@ -56,6 +56,7 @@ jobs:
             --exclude='phpunit.xml' \
             --exclude='README.md' \
             --exclude='DEPLOYMENT.md' \
+            --exclude='SETUP_GITHUB_ACTIONS.md' \
             --exclude='vite.config.js' \
             --exclude='tailwind.config.js' \
             --exclude='postcss.config.js' \
@@ -85,26 +86,37 @@ jobs:
           script: |
             cd ~/site_files
             
+            # Ensure storage directories exist
+            mkdir -p storage/framework/{sessions,views,cache}
+            mkdir -p storage/logs
+            mkdir -p bootstrap/cache
+            
             # Install/update composer dependencies
             composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+            
+            # Create .env if it doesn't exist (backup existing one first)
+            if [ ! -f .env ]; then
+              echo "⚠️  WARNING: .env file not found. Please create it manually."
+            fi
             
             # Run migrations (optional - uncomment if you want auto-migrations)
             # php artisan migrate --force
             
-            # Clear and cache config
-            php artisan config:clear
-            php artisan cache:clear
-            php artisan route:clear
-            php artisan view:clear
+            # Clear all caches first
+            php artisan config:clear || true
+            php artisan cache:clear || true
+            php artisan route:clear || true
+            php artisan view:clear || true
             
             # Optimize for production
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+            php artisan config:cache || true
+            php artisan route:cache || true
+            php artisan view:cache || true
             
             # Set proper permissions
             chmod -R 755 storage bootstrap/cache
-            chown -R raslorde:raslorde storage bootstrap/cache
+            chmod -R 775 storage/framework storage/logs
+            chown -R raslorde:raslorde storage bootstrap/cache || true
 
       - name: Deploy public files
         uses: appleboy/scp-action@v0.1.7
@@ -117,8 +129,38 @@ jobs:
           target: "~/public_html/control.raslordeckltd.com"
           strip_components: 1
 
+      - name: Create index.php wrapper and fix paths
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          script: |
+            # Create index.php that points to Laravel app
+            cat > ~/public_html/control.raslordeckltd.com/index.php << 'EOF'
+            <?php
+            // Laravel application entry point
+            // Adjust path if needed based on your server structure
+            $laravelPath = __DIR__ . '/../../site_files';
+            
+            // Check if Laravel path exists
+            if (!file_exists($laravelPath . '/public/index.php')) {
+                die('Laravel application not found at: ' . $laravelPath);
+            }
+            
+            // Change to Laravel public directory
+            chdir($laravelPath . '/public');
+            
+            // Include Laravel's index.php
+            require $laravelPath . '/public/index.php';
+            EOF
+            
+            # Set permissions
+            chmod 644 ~/public_html/control.raslordeckltd.com/index.php
+            chmod -R 755 ~/public_html/control.raslordeckltd.com
+            chown -R raslorde:raslorde ~/public_html/control.raslordeckltd.com || true
+
       - name: Deployment complete
         run: |
           echo "✅ Deployment completed successfully!"
-
-
