@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         // Ensure admin role exists
-        $adminRole = Role::firstOrCreate(['name' => 'super-admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
         // Create or update admin users
         $admins = [
