@@ -103,10 +103,14 @@ jobs:
             # php artisan migrate --force
             
             # Clear all caches first
+            php artisan optimize:clear || true
             php artisan config:clear || true
             php artisan cache:clear || true
             php artisan route:clear || true
             php artisan view:clear || true
+            
+            # Remove compiled views to ensure fresh compilation
+            rm -rf storage/framework/views/* || true
             
             # Optimize for production
             php artisan config:cache || true
