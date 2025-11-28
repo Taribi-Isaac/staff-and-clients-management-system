@@ -1,0 +1,124 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, bcmath, pdo, pdo_mysql, fileinfo, gd, zip
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Composer Dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Install NPM Dependencies
+        run: |
+          npm ci
+
+      - name: Build Assets
+        run: |
+          npm run build
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          # Copy files excluding unnecessary ones
+          rsync -av --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.env' \
+            --exclude='.env.example' \
+            --exclude='storage' \
+            --exclude='tests' \
+            --exclude='.editorconfig' \
+            --exclude='.gitattributes' \
+            --exclude='.gitignore' \
+            --exclude='phpunit.xml' \
+            --exclude='README.md' \
+            --exclude='DEPLOYMENT.md' \
+            --exclude='vite.config.js' \
+            --exclude='tailwind.config.js' \
+            --exclude='postcss.config.js' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='deploy' \
+            . deploy/
+
+      - name: Deploy to cPanel via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          source: "deploy/*"
+          target: "~/site_files"
+          strip_components: 1
+
+      - name: Run deployment commands on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          script: |
+            cd ~/site_files
+            
+            # Install/update composer dependencies
+            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+            
+            # Run migrations (optional - uncomment if you want auto-migrations)
+            # php artisan migrate --force
+            
+            # Clear and cache config
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan route:clear
+            php artisan view:clear
+            
+            # Optimize for production
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            
+            # Set proper permissions
+            chmod -R 755 storage bootstrap/cache
+            chown -R raslorde:raslorde storage bootstrap/cache
+
+      - name: Deploy public files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          source: "public/*"
+          target: "~/public_html/control.raslordeckltd.com"
+          strip_components: 1
+
+      - name: Deployment complete
+        run: |
+          echo "✅ Deployment completed successfully!"
+
+

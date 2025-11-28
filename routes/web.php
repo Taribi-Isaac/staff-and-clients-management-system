@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\IssuesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffController;
@@ -39,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
     Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
     Route::get('/staff/{id}', [StaffController::class, 'show'])->name('staff.show');
-    Route::get('/staff/{id}/edit}', [StaffController::class, 'edit'])->name('staff.edit');
+    Route::get('/staff/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
     Route::post('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
     Route::delete('/staff/{id}', [StaffController::class, 'destroy'])->name('staff.destroy');
 
@@ -47,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/employees', [EmployeesController::class, 'store'])->name('employees.store');
     Route::get('/employees', [EmployeesController::class, 'index'])->name('employees.index');
     Route::get('/employees/{id}', [EmployeesController::class, 'show'])->name('employees.show');
-    Route::get('/employees/{id}/edit}', [EmployeesController::class, 'edit'])->name('employees.edit');
+    Route::get('/employees/{id}/edit', [EmployeesController::class, 'edit'])->name('employees.edit');
     Route::post('/employees/{employees}', [EmployeesController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
 
@@ -63,6 +64,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
 
     Route::delete('/admin/{admin}', [AdminController::class, 'destroy'])->name('admin.destroy');
+
+    // Invoice Routes
+    Route::resource('invoices', InvoiceController::class);
+    Route::get('/invoices/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoices.duplicate');
+    Route::get('/invoices/{id}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
 });
 
 require __DIR__ . '/auth.php';

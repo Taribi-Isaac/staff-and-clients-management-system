@@ -37,6 +37,9 @@
                 <ul class="space-y-4">
 
                     <li><a href="{{ route('home') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Home</a></li>
+                    @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
+                    <li><a href="{{ route('invoices.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Invoices & Receipts</a></li>
+                    @endif
                     @if(auth()->user() && auth()->user()->hasRole('super-admin'))
                     <li><a href="{{ route('staff.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Staff</a></li>
                     @endif
