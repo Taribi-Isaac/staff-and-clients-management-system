@@ -27,6 +27,13 @@
             padding-bottom: 20px;
             border-bottom: 3px solid #dc2626;
         }
+        .company-logo {
+            margin-bottom: 15px;
+        }
+        .company-logo img {
+            max-height: 80px;
+            max-width: 200px;
+        }
         .company-info h1 {
             color: #dc2626;
             font-size: 24px;
@@ -158,6 +165,11 @@
         <!-- Header -->
         <div class="header">
             <div class="company-info">
+                @if(isset($logoData) && $logoData)
+                <div class="company-logo">
+                    <img src="data:image/png;base64,{{ $logoData }}" alt="Raslordeck Limited Logo">
+                </div>
+                @endif
                 <h1>Raslordeck Limited</h1>
                 <p>No 10 Ada George road, Port Harcourt.</p>
                 <p>Email: info@raslordeckltd.com</p>
@@ -165,7 +177,7 @@
             </div>
             <div class="invoice-info">
                 <h2>{{ $invoice->title ?? ucfirst($invoice->type) }}</h2>
-                <p><strong>Invoice #:</strong> {{ $invoice->invoice_number }}</p>
+                <p><strong>{{ ucfirst($invoice->type) }} #:</strong> {{ $invoice->invoice_number }}</p>
                 <p><strong>Date:</strong> {{ $invoice->invoice_date->format('M d, Y') }}</p>
                 @if($invoice->due_date)
                 <p><strong>Due Date:</strong> {{ $invoice->due_date->format('M d, Y') }}</p>

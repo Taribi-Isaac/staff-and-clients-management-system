@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto px-6 pb-4">
-    <h1 class="text-3xl font-bold mb-6 text-center">Edit Invoice/Receipt</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Edit Invoice/Receipt/Quote</h1>
 
     <form action="{{ route('invoices.update', $invoice->id) }}" method="POST" id="invoiceForm" class="bg-white p-8 rounded-lg shadow-md">
         @csrf
@@ -15,6 +15,7 @@
                 <select name="type" id="type" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                     <option value="invoice" {{ $invoice->type == 'invoice' ? 'selected' : '' }}>Invoice</option>
                     <option value="receipt" {{ $invoice->type == 'receipt' ? 'selected' : '' }}>Receipt</option>
+                    <option value="quote" {{ $invoice->type == 'quote' ? 'selected' : '' }}>Quote</option>
                 </select>
                 @error('type')
                     <span class="text-red-500 text-sm">{{ $message }}</span>

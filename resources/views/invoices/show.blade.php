@@ -29,6 +29,9 @@
         <!-- Header -->
         <div class="flex justify-between mb-8 pb-6 border-b-2 border-red-600">
             <div>
+                <div class="mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Raslordeck Limited Logo" class="h-16">
+                </div>
                 <h2 class="text-2xl font-bold text-red-600 mb-2">Raslordeck Limited</h2>
                 <p class="text-gray-600">No 10 Ada George road, Port Harcourt.</p>
                 <p class="text-gray-600">Email: info@raslordeckltd.com</p>
@@ -36,7 +39,7 @@
             </div>
             <div class="text-right">
                 <h3 class="text-xl font-bold mb-2">{{ $invoice->title ?? ucfirst($invoice->type) }}</h3>
-                <p class="text-gray-600"><strong>Invoice #:</strong> {{ $invoice->invoice_number }}</p>
+                <p class="text-gray-600"><strong>{{ ucfirst($invoice->type) }} #:</strong> {{ $invoice->invoice_number }}</p>
                 <p class="text-gray-600"><strong>Date:</strong> {{ $invoice->invoice_date->format('M d, Y') }}</p>
                 @if($invoice->due_date)
                 <p class="text-gray-600"><strong>Due Date:</strong> {{ $invoice->due_date->format('M d, Y') }}</p>
@@ -142,7 +145,7 @@
 
         <!-- Footer -->
         <div class="mt-8 pt-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-            <p>Created by: {{ $invoice->creator->name ?? 'N/A' }} on {{ $invoice->created_at->format('M d, Y h:i A') }}</p>
+            <p>Visit us: www.raslordeckltd.com</p>
         </div>
     </div>
 </div>

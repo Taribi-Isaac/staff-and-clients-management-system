@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto px-6 pb-4">
-    <h1 class="text-3xl font-bold mb-6 text-center">Invoices & Receipts</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Invoices, Receipts & Quotes</h1>
 
     <!-- Search and Filters -->
     <div class="flex flex-wrap justify-between mb-6 gap-4">
@@ -14,10 +14,11 @@
                 placeholder="Search by invoice number, client, or title"
                 class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
             
-            <select name="type" class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                <select name="type" class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
                 <option value="">All Types</option>
                 <option value="invoice" {{ request('type') == 'invoice' ? 'selected' : '' }}>Invoices</option>
                 <option value="receipt" {{ request('type') == 'receipt' ? 'selected' : '' }}>Receipts</option>
+                <option value="quote" {{ request('type') == 'quote' ? 'selected' : '' }}>Quotes</option>
             </select>
 
             <select name="status" class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
@@ -34,7 +35,7 @@
         </form>
         
         <a href="{{ route('invoices.create') }}" class="bg-red-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-red-700 transition">
-            Create New Invoice
+            Create New Invoice/Quote
         </a>
     </div>
 
@@ -65,7 +66,14 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 font-medium">{{ $invoice->invoice_number }}</td>
                     <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-xs {{ $invoice->type == 'invoice' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                        @php
+                            $typeColors = [
+                                'invoice' => 'bg-blue-100 text-blue-800',
+                                'receipt' => 'bg-green-100 text-green-800',
+                                'quote' => 'bg-purple-100 text-purple-800',
+                            ];
+                        @endphp
+                        <span class="px-2 py-1 rounded text-xs {{ $typeColors[$invoice->type] ?? 'bg-gray-100 text-gray-800' }}">
                             {{ ucfirst($invoice->type) }}
                         </span>
                     </td>

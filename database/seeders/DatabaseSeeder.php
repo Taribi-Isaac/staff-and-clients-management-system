@@ -25,5 +25,10 @@ class DatabaseSeeder extends Seeder
 
         // Assign super-admin role to the user
         $superAdmin->assignRole('super-admin');
+
+        // Seed admin users
+        $this->call([
+            AdminSeeder::class,
+        ]);
     }
 }

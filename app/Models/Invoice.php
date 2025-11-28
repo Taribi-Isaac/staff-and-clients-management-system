@@ -60,15 +60,22 @@ class Invoice extends Model
 
         static::creating(function ($invoice) {
             if (empty($invoice->invoice_number)) {
-                $invoice->invoice_number = static::generateInvoiceNumber();
+                $invoice->invoice_number = static::generateInvoiceNumber($invoice->type ?? 'invoice');
             }
         });
     }
 
-    public static function generateInvoiceNumber(): string
+    public static function generateInvoiceNumber(string $type = 'invoice'): string
     {
-        $prefix = 'INV-';
+        $prefixes = [
+            'invoice' => 'INV-',
+            'receipt' => 'RCP-',
+            'quote' => 'QUO-',
+        ];
+        
+        $prefix = $prefixes[$type] ?? 'INV-';
         $year = date('Y');
+        
         $lastInvoice = static::where('invoice_number', 'like', $prefix . $year . '%')
             ->orderBy('invoice_number', 'desc')
             ->first();

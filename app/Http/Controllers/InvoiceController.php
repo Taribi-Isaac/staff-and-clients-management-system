@@ -68,7 +68,7 @@ class InvoiceController extends Controller
         }
 
         $validated = $request->validate([
-            'type' => 'required|in:invoice,receipt',
+            'type' => 'required|in:invoice,receipt,quote',
             'title' => 'nullable|string|max:255',
             'client_id' => 'nullable|exists:clients,id',
             'client_name' => 'nullable|string|max:255',
@@ -107,7 +107,11 @@ class InvoiceController extends Controller
             }
         }
 
+        // Generate invoice number based on type
+        $invoiceNumber = Invoice::generateInvoiceNumber($validated['type']);
+        
         $invoice = Invoice::create([
+            'invoice_number' => $invoiceNumber,
             'type' => $validated['type'],
             'title' => $validated['title'] ?? null,
             'client_id' => $validated['client_id'] ?? null,
@@ -185,7 +189,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
 
         $validated = $request->validate([
-            'type' => 'required|in:invoice,receipt',
+            'type' => 'required|in:invoice,receipt,quote',
             'title' => 'nullable|string|max:255',
             'client_id' => 'nullable|exists:clients,id',
             'client_name' => 'nullable|string|max:255',
@@ -319,7 +323,14 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::with(['items', 'client', 'creator'])->findOrFail($id);
 
-        $html = view('invoices.pdf', compact('invoice'))->render();
+        // Prepare logo data for PDF
+        $logoPath = public_path('images/logo.png');
+        $logoData = null;
+        if (file_exists($logoPath)) {
+            $logoData = base64_encode(file_get_contents($logoPath));
+        }
+
+        $html = view('invoices.pdf', compact('invoice', 'logoData'))->render();
 
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
