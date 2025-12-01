@@ -41,26 +41,30 @@ public function edit($id)
 
 
 
-public function update(Request $request, $id)
+public function update(Request $request, $client)
 {
-    $client = Clients::findOrFail($id);
+    // Handle both route model binding and ID parameter
+    if (is_numeric($client)) {
+        $client = Clients::findOrFail($client);
+    }
+    $id = $client->id;
 
     $request->validate([
         'client_name' => 'required|string|max:255',
         'business_name' => 'nullable|string|max:255',
-        'location' => 'required|string|max:255',
-        'account_number' => 'required|string|max:255',
-        'dish_serial_number' => 'required|string|max:255',
-        'kit_number' => 'required|string|max:255',
-        'starlink_id' => 'required|string|max:255',
-        'Password' => 'required|string|max:255',
+        'location' => 'nullable|string|max:255',
+        'account_number' => 'nullable|string|max:255',
+        'dish_serial_number' => 'nullable|string|max:255',
+        'kit_number' => 'nullable|string|max:255',
+        'starlink_id' => 'nullable|string|max:255',
+        'password' => 'nullable|string|max:255',
         'subscription_duration' => 'nullable|string|max:255',
         'subscription_start_date' => 'nullable|date',
         'subscription_end_date' => 'nullable|date',
         'email' => 'required|email|unique:clients,email,' . $id,
-        'service_address' => 'nullable|string|max:255',
+        'service_address' => 'nullable|string',
         'account_name' => 'nullable|string|max:255',
-        'card_details' => 'nullable|string|max:255',
+        'card_details' => 'nullable|string',
     ]);
 
     $client->update($request->all());
