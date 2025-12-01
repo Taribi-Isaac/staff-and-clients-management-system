@@ -56,7 +56,7 @@
                 <!-- Starlink Password -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Starlink Password</label>
-                    <p class="mt-1 p-3 border border-gray-300 rounded-lg">{{ $client->Password ?? 'N/A' }}</p>
+                    <p class="mt-1 p-3 border border-gray-300 rounded-lg">{{ $client->password ?? 'N/A' }}</p>
                 </div>
 
                 <!-- Subscription Duration -->
