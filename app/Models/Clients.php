@@ -22,6 +22,7 @@ class Clients extends Model
         'subscription_end_date',
         'email',
         'password',
+        'phone',
         'service_address',
         'account_name',
         'card_details',

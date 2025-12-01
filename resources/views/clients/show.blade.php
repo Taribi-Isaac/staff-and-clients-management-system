@@ -83,6 +83,12 @@
                     <p class="mt-1 p-3 border border-gray-300 rounded-lg">{{ $client->email }}</p>
                 </div>
 
+                <!-- Phone -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Phone</label>
+                    <p class="mt-1 p-3 border border-gray-300 rounded-lg">{{ $client->phone ?? 'N/A' }}</p>
+                </div>
+
                 <!-- Service Address -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Service Address</label>

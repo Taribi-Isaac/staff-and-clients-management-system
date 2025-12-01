@@ -107,6 +107,15 @@
                     @enderror
                 </div>
 
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                    <input type="text" name="phone" id="phone" class="mt-1 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ old('phone') }}">
+                    @error('phone')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>

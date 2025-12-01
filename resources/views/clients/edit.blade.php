@@ -118,6 +118,15 @@
     @enderror
 </div>
 
+<!-- Phone -->
+<div>
+    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+    <input type="text" name="phone" value="{{ old('phone', $client->phone ?? '') }}" id="phone" class="mt-1 p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+    @error('phone')
+        <span class="text-red-500 text-sm">{{ $message }}</span>
+    @enderror
+</div>
+
 <!-- Service Address -->
 <div>
     <label for="service_address" class="block text-sm font-medium text-gray-700">Service Address</label>
