@@ -38,3 +38,24 @@ echo "✅ Database switch completed!"
 echo ""
 echo "Next: Run php create_tables_in_admin_db.php to create invoice tables"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -204,3 +204,24 @@ echo "1. Clear config cache: php artisan config:clear"
 echo "2. Test the application"
 echo "\n";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

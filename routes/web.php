@@ -7,7 +7,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\IssuesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\InventoryTransactionController;
 use App\Models\Issues;
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +72,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('invoices', InvoiceController::class);
     Route::get('/invoices/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoices.duplicate');
     Route::get('/invoices/{id}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
+
+    // Project Routes
+    Route::resource('projects', ProjectController::class);
+
+    // Inventory Routes
+    Route::resource('items', ItemController::class);
+    Route::post('/items/bulk-upload', [ItemController::class, 'bulkUpload'])->name('items.bulk-upload');
+    Route::get('/items/template/download', [ItemController::class, 'downloadTemplate'])->name('items.template.download');
+    Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('inventory-transactions', InventoryTransactionController::class)->except(['edit', 'update', 'destroy']);
 });
 
 require __DIR__ . '/auth.php';

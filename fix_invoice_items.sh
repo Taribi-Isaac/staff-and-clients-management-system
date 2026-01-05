@@ -64,3 +64,24 @@ echo "Verify by running: php artisan tinker"
 echo "Then: Schema::hasTable('invoice_items')"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

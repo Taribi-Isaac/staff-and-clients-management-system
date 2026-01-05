@@ -41,3 +41,24 @@ echo "1. Visit the site again"
 echo "2. Check storage/logs/laravel.log for new errors"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

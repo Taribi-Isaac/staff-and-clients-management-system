@@ -61,3 +61,24 @@ echo "2. The home page should now show all counts correctly"
 echo "3. You can now run new migrations if needed"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

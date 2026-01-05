@@ -21,3 +21,24 @@ ALTER TABLE `invoice_items`
 ADD CONSTRAINT `invoice_items_invoice_id_foreign`
 FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

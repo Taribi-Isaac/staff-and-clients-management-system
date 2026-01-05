@@ -140,3 +140,24 @@ After successful setup:
 3. Consider enabling automatic migrations if desired (uncomment in workflow)
 4. Set up email notifications for deployment status (optional)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

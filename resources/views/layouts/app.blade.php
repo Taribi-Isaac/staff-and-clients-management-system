@@ -39,6 +39,8 @@
                     <li><a href="{{ route('home') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Home</a></li>
                     @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
                     <li><a href="{{ route('invoices.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Invoices, Receipts & Quotes</a></li>
+                    <li><a href="{{ route('projects.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Projects</a></li>
+                    <li><a href="{{ route('items.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Inventory</a></li>
                     @endif
                     @if(auth()->user() && auth()->user()->hasRole('super-admin'))
                     <li><a href="{{ route('staff.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Staff</a></li>

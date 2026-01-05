@@ -14,3 +14,24 @@ echo ""
 echo "Or use this one-liner (replace with your actual public key):"
 echo "  echo '$(cat ~/.ssh/github_actions_deploy.pub)' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

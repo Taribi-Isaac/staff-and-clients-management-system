@@ -168,3 +168,24 @@ chmod -R 755 storage bootstrap/cache
 4. **Rotate SSH keys** periodically
 5. **Monitor deployment logs** for suspicious activity
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

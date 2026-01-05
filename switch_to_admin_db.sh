@@ -31,3 +31,24 @@ echo "3. Mark migrations as run"
 echo ""
 echo "Run: php create_tables_in_admin_db.php"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

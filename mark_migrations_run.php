@@ -51,3 +51,24 @@ foreach ($migrations as $migration) {
 echo "\n✅ Done!\n";
 echo "You can now run: php artisan migrate\n";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

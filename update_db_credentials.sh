@@ -28,3 +28,24 @@ echo "  DB_USERNAME=raslorde_admin  (or your actual username)"
 echo ""
 echo "And update DB_PASSWORD if needed"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

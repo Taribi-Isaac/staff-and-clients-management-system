@@ -82,3 +82,24 @@ echo "2. Check storage/logs/laravel.log for any errors"
 echo "3. Visit https://control.raslordeckltd.com"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

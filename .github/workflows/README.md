@@ -33,3 +33,24 @@ You can manually trigger the deployment by:
 2. Selecting **Deploy to cPanel** workflow
 3. Clicking **Run workflow**
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

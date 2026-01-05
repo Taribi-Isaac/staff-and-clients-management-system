@@ -5,3 +5,24 @@
 
 ALTER TABLE `invoices` MODIFY COLUMN `type` ENUM('invoice', 'receipt', 'quote') NOT NULL DEFAULT 'invoice';
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

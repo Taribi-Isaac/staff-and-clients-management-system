@@ -92,3 +92,24 @@ After deployment, test:
 3. Generate PDF and verify logo appears
 4. Test password reset email
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

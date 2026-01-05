@@ -78,3 +78,24 @@ nano .env  # Edit DB_PASSWORD line
 php artisan config:clear
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

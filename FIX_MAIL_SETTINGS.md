@@ -66,3 +66,24 @@ If port 465 doesn't work, try:
 - Port **587** with `MAIL_ENCRYPTION=tls`
 - Or check your cPanel email settings for the correct port
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
