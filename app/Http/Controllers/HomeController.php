@@ -13,6 +13,13 @@ use App\Models\Item;
 use App\Models\Supplier;
 use App\Models\Category;
 use App\Models\InventoryTransaction;
+use App\Models\CashBookEntry;
+use App\Models\PettyCashEntry;
+use App\Models\SalesBookEntry;
+use App\Models\PurchasesBookEntry;
+use App\Models\ArLedgerEntry;
+use App\Models\ApLedgerEntry;
+use App\Models\PayrollBookEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +68,27 @@ class HomeController extends Controller
         $activeClients = Clients::where('status', 'active')->count();
         $inactiveClients = Clients::where('status', 'inactive')->count();
         
+        // Finance statistics
+        $cashBookEntries = CashBookEntry::count();
+        $cashBookBalance = CashBookEntry::where('transaction_type', 'receipt')->sum('amount') - CashBookEntry::where('transaction_type', 'payment')->sum('amount');
+        $pettyCashEntries = PettyCashEntry::count();
+        // Only count authorized transactions for balance
+        $pettyCashBalance = PettyCashEntry::where('transaction_type', 'replenishment')
+            ->where('authorization_status', 'authorized')
+            ->sum('amount') - PettyCashEntry::where('transaction_type', 'expense')
+            ->where('authorization_status', 'authorized')
+            ->sum('amount');
+        $salesBookEntries = SalesBookEntry::count();
+        $totalSales = SalesBookEntry::sum('total');
+        $purchasesBookEntries = PurchasesBookEntry::count();
+        $totalPurchases = PurchasesBookEntry::sum('total');
+        $arLedgerEntries = ArLedgerEntry::count();
+        $totalReceivable = ArLedgerEntry::sum('balance');
+        $apLedgerEntries = ApLedgerEntry::count();
+        $totalPayable = ApLedgerEntry::sum('balance');
+        $payrollBookEntries = PayrollBookEntry::count();
+        $totalPayroll = PayrollBookEntry::sum('net_pay');
+        
         // Recent activity (last 7 days)
         $recentProjects = Project::where('created_at', '>=', now()->subDays(7))->count();
         $recentInvoices = Invoice::where('created_at', '>=', now()->subDays(7))->count();
@@ -73,6 +101,10 @@ class HomeController extends Controller
             'allInvoices', 'totalInvoices', 'totalReceipts', 'totalQuotes', 'paidInvoices', 'totalRevenue', 'pendingInvoices',
             'allItems', 'lowStockItems', 'outOfStockItems', 'totalSuppliers', 'totalCategories', 'totalTransactions', 'totalInventoryValue',
             'activeEmployees', 'activeStaff', 'activeClients', 'inactiveClients',
+            'cashBookEntries', 'cashBookBalance', 'pettyCashEntries', 'pettyCashBalance',
+            'salesBookEntries', 'totalSales', 'purchasesBookEntries', 'totalPurchases',
+            'arLedgerEntries', 'totalReceivable', 'apLedgerEntries', 'totalPayable',
+            'payrollBookEntries', 'totalPayroll',
             'recentProjects', 'recentInvoices', 'recentClients', 'recentTransactions'
         ));
     }

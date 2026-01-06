@@ -65,23 +65,8 @@
             <h2 class="text-xl font-semibold mb-4">Client Information</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="client_id" class="block text-sm font-medium text-gray-700 mb-2">Select Client (Optional)</label>
-                    <select name="client_id" id="client_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <option value="">-- Select Client --</option>
-                        @foreach($clients as $client)
-                            <option value="{{ $client->id }}" data-name="{{ $client->client_name }}" data-email="{{ $client->email }}" data-address="{{ $client->service_address ?? '' }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
-                                {{ $client->client_name }} ({{ $client->email }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('client_id')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="client_name" class="block text-sm font-medium text-gray-700 mb-2">Client Name</label>
-                    <input type="text" name="client_name" id="client_name" value="{{ old('client_name') }}" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <label for="client_name" class="block text-sm font-medium text-gray-700 mb-2">Client Name *</label>
+                    <input type="text" name="client_name" id="client_name" value="{{ old('client_name') }}" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                     @error('client_name')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror

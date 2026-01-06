@@ -220,6 +220,74 @@
         </div>
         @endif
 
+        <!-- Finance Section -->
+        @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Finance</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="{{ route('cash-book.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Cash Book</h3>
+                            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $cashBookEntries }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Balance: ₦{{ number_format($cashBookBalance, 2) }}</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{{ route('sales-book.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Sales Book</h3>
+                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $salesBookEntries }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Total: ₦{{ number_format($totalSales, 2) }}</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{{ route('ar-ledger.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Accounts Receivable</h3>
+                            <p class="text-3xl font-bold text-orange-600 mt-2">{{ $arLedgerEntries }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Outstanding: ₦{{ number_format($totalReceivable, 2) }}</p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{{ route('ap-ledger.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Accounts Payable</h3>
+                            <p class="text-3xl font-bold text-red-600 mt-2">{{ $apLedgerEntries }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Outstanding: ₦{{ number_format($totalPayable, 2) }}</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        @endif
+
         <!-- Recent Activity -->
         @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
         <div class="mb-8">

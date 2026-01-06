@@ -15,8 +15,9 @@
                 class="w-100 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-blue-600 transition">Search</button>
         </form>
-        <div class="ml-2 bg-blue-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-blue-600 transition">
-            <a href="{{ route('employees.create') }}">Create New</a>
+        <div class="flex gap-2">
+            <a href="{{ route('employee.public.create') }}" target="_blank" class="bg-green-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-green-600 transition">Public Registration Form</a>
+            <a href="{{ route('employees.create') }}" class="bg-blue-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-blue-600 transition">Create New</a>
         </div>
     </div>
 

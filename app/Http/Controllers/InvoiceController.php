@@ -53,8 +53,7 @@ class InvoiceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $clients = Clients::orderBy('client_name')->get();
-        return view('invoices.create', compact('clients'));
+        return view('invoices.create');
     }
 
     /**
@@ -173,7 +172,7 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::with('items')->findOrFail($id);
         $clients = Clients::orderBy('client_name')->get();
-        return view('invoices.edit', compact('invoice', 'clients'));
+        return view('invoices.edit', compact('invoice'));
     }
 
     /**

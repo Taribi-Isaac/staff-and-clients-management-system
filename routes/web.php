@@ -13,12 +13,25 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\InventoryTransactionController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\CashBookController;
+use App\Http\Controllers\PettyCashController;
+use App\Http\Controllers\SalesBookController;
+use App\Http\Controllers\PurchasesBookController;
+use App\Http\Controllers\ArLedgerController;
+use App\Http\Controllers\ApLedgerController;
+use App\Http\Controllers\PayrollBookController;
+use App\Http\Controllers\GeneralLedgerController;
 use App\Models\Issues;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Public employee registration form
+Route::get('/employee/register', [EmployeesController::class, 'publicCreate'])->name('employee.public.create');
+Route::post('/employee/register', [EmployeesController::class, 'publicStore'])->name('employee.public.store');
 
 Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -83,6 +96,30 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('inventory-transactions', InventoryTransactionController::class)->except(['edit', 'update', 'destroy']);
+
+    // Finance Routes
+    Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+    Route::get('/general-ledger', [GeneralLedgerController::class, 'index'])->name('general-ledger.index');
+    Route::get('/general-ledger/export', [GeneralLedgerController::class, 'export'])->name('general-ledger.export');
+    Route::resource('cash-book', CashBookController::class);
+    Route::post('/petty-cash/{id}/authorize', [PettyCashController::class, 'authorize'])->name('petty-cash.authorize');
+    Route::get('/petty-cash/employee/{employeeId}', [PettyCashController::class, 'employeeTransactions'])->name('petty-cash.employee');
+    Route::get('/petty-cash/employee/{employeeId}/export', [PettyCashController::class, 'exportEmployeeTransactions'])->name('petty-cash.employee.export');
+    Route::resource('petty-cash', PettyCashController::class);
+    Route::resource('sales-book', SalesBookController::class);
+    Route::resource('purchases-book', PurchasesBookController::class);
+    Route::resource('ar-ledger', ArLedgerController::class);
+    Route::resource('ap-ledger', ApLedgerController::class);
+    Route::resource('payroll-book', PayrollBookController::class);
+    
+    // Export routes for financial books
+    Route::get('/cash-book/export', [CashBookController::class, 'export'])->name('cash-book.export');
+    Route::get('/petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export');
+    Route::get('/sales-book/export', [SalesBookController::class, 'export'])->name('sales-book.export');
+    Route::get('/purchases-book/export', [PurchasesBookController::class, 'export'])->name('purchases-book.export');
+    Route::get('/ar-ledger/export', [ArLedgerController::class, 'export'])->name('ar-ledger.export');
+    Route::get('/ap-ledger/export', [ApLedgerController::class, 'export'])->name('ap-ledger.export');
+    Route::get('/payroll-book/export', [PayrollBookController::class, 'export'])->name('payroll-book.export');
 });
 
 require __DIR__ . '/auth.php';
