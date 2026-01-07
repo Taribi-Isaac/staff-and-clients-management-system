@@ -196,15 +196,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     let itemIndex = 1;
 
-    // Auto-fill client details when client is selected
-    document.getElementById('client_id').addEventListener('change', function() {
-        const option = this.options[this.selectedIndex];
-        if (option.value) {
-            document.getElementById('client_name').value = option.dataset.name || '';
-            document.getElementById('client_email').value = option.dataset.email || '';
-            document.getElementById('client_address').value = option.dataset.address || '';
-        }
-    });
+    // Auto-fill client details when client is selected (if client_id field exists)
+    const clientIdField = document.getElementById('client_id');
+    if (clientIdField) {
+        clientIdField.addEventListener('change', function() {
+            const option = this.options[this.selectedIndex];
+            if (option.value) {
+                document.getElementById('client_name').value = option.dataset.name || '';
+                document.getElementById('client_email').value = option.dataset.email || '';
+                document.getElementById('client_address').value = option.dataset.address || '';
+            }
+        });
+    }
 
     // Add new item
     document.getElementById('addItem').addEventListener('click', function() {
