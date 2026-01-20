@@ -165,10 +165,44 @@ class EmployeesController extends Controller
 
     public function destroy($id)
     {
-        $employees = Employees::findOrFail($id);
-        $employees->delete();
+        try {
+            $employee = Employees::findOrFail($id);
 
-        return response()->json(['message' => 'Employee deleted successfully']);
+            // Check for related records
+            $hasPettyCashEntries = $employee->pettyCashEntries()->exists();
+            $hasPayrollBookEntries = $employee->payrollBookEntries()->exists();
+
+            if ($hasPettyCashEntries || $hasPayrollBookEntries) {
+                $relatedItems = [];
+                if ($hasPettyCashEntries) $relatedItems[] = 'petty cash entries';
+                if ($hasPayrollBookEntries) $relatedItems[] = 'payroll book entries';
+
+                return redirect()->route('employees.index')
+                    ->with('error', 'Cannot delete employee. This employee has related ' . implode(', ', $relatedItems) . '. Please remove these relationships first.');
+            }
+
+            // Delete associated files
+            if ($employee->passport && Storage::disk('public')->exists($employee->passport)) {
+                Storage::disk('public')->delete($employee->passport);
+            }
+
+            foreach (['submit_doc_1', 'submit_doc_2', 'submit_doc_3'] as $doc) {
+                if ($employee->$doc && Storage::disk('public')->exists($employee->$doc)) {
+                    Storage::disk('public')->delete($employee->$doc);
+                }
+            }
+
+            $employee->delete();
+
+            return redirect()->route('employees.index')
+                ->with('success', 'Employee deleted successfully.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('employees.index')
+                ->with('error', 'Employee not found.');
+        } catch (\Exception $e) {
+            return redirect()->route('employees.index')
+                ->with('error', 'An error occurred while deleting the employee: ' . $e->getMessage());
+        }
     }
 
     /**

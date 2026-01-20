@@ -109,7 +109,43 @@ public function store(Request $request)
 
 
 
-public function destroy(){
+public function destroy($id)
+{
+    try {
+        $client = Clients::findOrFail($id);
 
+        // Check for related records
+        $hasInvoices = $client->invoices()->exists();
+        $hasArLedgerEntries = $client->arLedgerEntries()->exists();
+        $hasSalesBookEntries = $client->salesBookEntries()->exists();
+        $hasCashBookEntries = $client->cashBookEntries()->exists();
+        $hasInventoryTransactions = $client->inventoryTransactions()->exists();
+        $hasProjects = $client->projects()->exists();
+
+        if ($hasInvoices || $hasArLedgerEntries || $hasSalesBookEntries || 
+            $hasCashBookEntries || $hasInventoryTransactions || $hasProjects) {
+            $relatedItems = [];
+            if ($hasInvoices) $relatedItems[] = 'invoices';
+            if ($hasArLedgerEntries) $relatedItems[] = 'AR ledger entries';
+            if ($hasSalesBookEntries) $relatedItems[] = 'sales book entries';
+            if ($hasCashBookEntries) $relatedItems[] = 'cash book entries';
+            if ($hasInventoryTransactions) $relatedItems[] = 'inventory transactions';
+            if ($hasProjects) $relatedItems[] = 'projects';
+
+            return redirect()->route('clients.index')
+                ->with('error', 'Cannot delete client. This client has related ' . implode(', ', $relatedItems) . '. Please remove these relationships first.');
+        }
+
+        $client->delete();
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client deleted successfully.');
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return redirect()->route('clients.index')
+            ->with('error', 'Client not found.');
+    } catch (\Exception $e) {
+        return redirect()->route('clients.index')
+            ->with('error', 'An error occurred while deleting the client: ' . $e->getMessage());
+    }
 }
 }

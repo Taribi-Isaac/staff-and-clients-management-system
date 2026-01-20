@@ -36,3 +36,6 @@ echo "  echo '$(cat ~/.ssh/github_actions_deploy.pub)' >> ~/.ssh/authorized_keys
 
 
 
+
+
+

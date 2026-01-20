@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employees extends Model
 {
@@ -40,4 +41,14 @@ class Employees extends Model
         'submit_doc_2',
         'submit_doc_3',
     ];
+
+    public function pettyCashEntries(): HasMany
+    {
+        return $this->hasMany(PettyCashEntry::class, 'employee_id');
+    }
+
+    public function payrollBookEntries(): HasMany
+    {
+        return $this->hasMany(PayrollBookEntry::class, 'employee_id');
+    }
 }

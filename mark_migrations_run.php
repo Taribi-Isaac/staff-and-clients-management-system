@@ -73,3 +73,6 @@ echo "You can now run: php artisan migrate\n";
 
 
 
+
+
+
