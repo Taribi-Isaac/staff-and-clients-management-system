@@ -29,4 +29,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Task relationships
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'created_by');
+    }
+
+    public function assignedTasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_assignments')
+            ->withTimestamps();
+    }
+
+    public function taskComments()
+    {
+        return $this->hasMany(TaskComment::class);
+    }
 }

@@ -118,6 +118,9 @@
                         @elseif($transaction->assignedProject)
                             <div>{{ $transaction->assignedProject->project_name }}</div>
                             <div class="text-xs text-gray-500">Project</div>
+                        @elseif($transaction->assigned_to_external_individual)
+                            <div>{{ $transaction->assigned_to_external_individual }}</div>
+                            <div class="text-xs text-gray-500">External Individual</div>
                         @else
                             <span class="text-gray-400">—</span>
                         @endif

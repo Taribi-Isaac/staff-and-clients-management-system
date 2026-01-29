@@ -52,7 +52,7 @@
                 </p>
             </div>
 
-            @if($transaction->assignedUser || $transaction->assignedClient || $transaction->assignedProject)
+            @if($transaction->assignedUser || $transaction->assignedClient || $transaction->assignedProject || $transaction->assigned_to_external_individual)
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
                 @if($transaction->assignedUser)
@@ -69,6 +69,11 @@
                     <div>
                         <p class="text-lg font-semibold">{{ $transaction->assignedProject->project_name }}</p>
                         <p class="text-sm text-gray-500">Project</p>
+                    </div>
+                @elseif($transaction->assigned_to_external_individual)
+                    <div>
+                        <p class="text-lg font-semibold">{{ $transaction->assigned_to_external_individual }}</p>
+                        <p class="text-sm text-gray-500">External Individual</p>
                     </div>
                 @endif
             </div>

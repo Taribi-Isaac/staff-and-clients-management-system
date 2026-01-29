@@ -72,51 +72,68 @@
             <div id="assignment-section" class="md:col-span-2 hidden">
                 <h3 class="text-lg font-semibold mb-4 text-gray-700">Assignment Details</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <!-- Assign to Staff -->
-                    <div>
-                        <label for="assigned_to_user_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Staff</label>
-                        <select name="assigned_to_user_id" id="assigned_to_user_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <option value="">-- Select Staff --</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ old('assigned_to_user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('assigned_to_user_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:col-span-2">
+                        <!-- Assign to Staff -->
+                        <div>
+                            <label for="assigned_to_user_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Staff</label>
+                            <select name="assigned_to_user_id" id="assigned_to_user_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="">-- Select Staff --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ old('assigned_to_user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('assigned_to_user_id')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Assign to Client -->
+                        <div>
+                            <label for="assigned_to_client_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Client</label>
+                            <select name="assigned_to_client_id" id="assigned_to_client_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="">-- Select Client --</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" {{ old('assigned_to_client_id') == $client->id ? 'selected' : '' }}>
+                                        {{ $client->client_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('assigned_to_client_id')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Assign to Project -->
+                        <div>
+                            <label for="assigned_to_project_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Project</label>
+                            <select name="assigned_to_project_id" id="assigned_to_project_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="">-- Select Project --</option>
+                                @foreach($projects as $project)
+                                    <option value="{{ $project->id }}" {{ old('assigned_to_project_id') == $project->id ? 'selected' : '' }}>
+                                        {{ $project->project_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('assigned_to_project_id')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
 
-                    <!-- Assign to Client -->
+                    <!-- Assign to External Individual -->
                     <div>
-                        <label for="assigned_to_client_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Client</label>
-                        <select name="assigned_to_client_id" id="assigned_to_client_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <option value="">-- Select Client --</option>
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}" {{ old('assigned_to_client_id') == $client->id ? 'selected' : '' }}>
-                                    {{ $client->client_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('assigned_to_client_id')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Assign to Project -->
-                    <div>
-                        <label for="assigned_to_project_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Project</label>
-                        <select name="assigned_to_project_id" id="assigned_to_project_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <option value="">-- Select Project --</option>
-                            @foreach($projects as $project)
-                                <option value="{{ $project->id }}" {{ old('assigned_to_project_id') == $project->id ? 'selected' : '' }}>
-                                    {{ $project->project_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('assigned_to_project_id')
+                        <label for="assigned_to_external_individual" class="block text-sm font-medium text-gray-700 mb-2">External Individual Name</label>
+                        <input type="text" 
+                               name="assigned_to_external_individual" 
+                               id="assigned_to_external_individual" 
+                               value="{{ old('assigned_to_external_individual') }}" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" 
+                               placeholder="Enter name of external individual">
+                        <p class="mt-1 text-xs text-gray-500">For individuals not in the organization</p>
+                        @error('assigned_to_external_individual')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
@@ -171,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('assigned_to_user_id').value = '';
             document.getElementById('assigned_to_client_id').value = '';
             document.getElementById('assigned_to_project_id').value = '';
+            document.getElementById('assigned_to_external_individual').value = '';
             expectedReturnDateInput.value = '';
         }
     }

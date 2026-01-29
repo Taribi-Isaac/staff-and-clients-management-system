@@ -17,6 +17,7 @@ class InventoryTransaction extends Model
         'assigned_to_user_id',
         'assigned_to_client_id',
         'assigned_to_project_id',
+        'assigned_to_external_individual',
         'transaction_date',
         'expected_return_date',
         'notes',

@@ -22,6 +22,7 @@ use App\Http\Controllers\ArLedgerController;
 use App\Http\Controllers\ApLedgerController;
 use App\Http\Controllers\PayrollBookController;
 use App\Http\Controllers\GeneralLedgerController;
+use App\Http\Controllers\TaskController;
 use App\Models\Issues;
 use Illuminate\Support\Facades\Route;
 
@@ -120,6 +121,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/ar-ledger/export', [ArLedgerController::class, 'export'])->name('ar-ledger.export');
     Route::get('/ap-ledger/export', [ApLedgerController::class, 'export'])->name('ap-ledger.export');
     Route::get('/payroll-book/export', [PayrollBookController::class, 'export'])->name('payroll-book.export');
+    
+    // Task Management Routes
+    Route::resource('tasks', TaskController::class);
+    Route::post('/tasks/{id}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.store');
+    Route::post('/tasks/{id}/attachments', [TaskController::class, 'addAttachment'])->name('tasks.attachments.store');
+    Route::delete('/tasks/{taskId}/attachments/{attachmentId}', [TaskController::class, 'deleteAttachment'])->name('tasks.attachments.destroy');
+    Route::post('/tasks/{taskId}/subtasks', [TaskController::class, 'addSubtask'])->name('tasks.subtasks.store');
+    Route::delete('/tasks/{taskId}/subtasks/{subtaskId}', [TaskController::class, 'deleteSubtask'])->name('tasks.subtasks.destroy');
+    Route::post('/tasks/{taskId}/subtasks/{subtaskId}/toggle', [TaskController::class, 'toggleSubtask'])->name('tasks.subtasks.toggle');
 });
 
 require __DIR__ . '/auth.php';

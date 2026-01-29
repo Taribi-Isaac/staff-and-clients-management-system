@@ -51,6 +51,7 @@ class InventoryTransactionController extends Controller
             'assigned_to_user_id' => 'nullable|exists:users,id',
             'assigned_to_client_id' => 'nullable|exists:clients,id',
             'assigned_to_project_id' => 'nullable|exists:projects,id',
+            'assigned_to_external_individual' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'expected_return_date' => 'nullable|date|after_or_equal:transaction_date',
             'notes' => 'nullable|string',
@@ -75,13 +76,13 @@ class InventoryTransactionController extends Controller
                 // Adjustment can be positive or negative (handled by quantity input sign)
                 $stockChange = $request->quantity;
             } elseif ($request->transaction_type === 'assignment') {
-                // Assignment decreases stock (item assigned to staff/client/project)
+                // Assignment decreases stock (item assigned to staff/client/project/external individual)
                 $stockChange = -abs($request->quantity);
                 // Require assignment target for assignment type
-                if (!$request->assigned_to_user_id && !$request->assigned_to_client_id && !$request->assigned_to_project_id) {
+                if (!$request->assigned_to_user_id && !$request->assigned_to_client_id && !$request->assigned_to_project_id && !$request->assigned_to_external_individual) {
                     return redirect()->back()
                         ->withInput()
-                        ->with('error', 'Assignment requires a staff, client, or project to be assigned to.');
+                        ->with('error', 'Assignment requires a staff, client, project, or external individual to be assigned to.');
                 }
             } elseif ($request->transaction_type === 'consumption') {
                 // Consumption decreases stock permanently (for consumables)
@@ -104,6 +105,7 @@ class InventoryTransactionController extends Controller
                 'assigned_to_user_id' => $request->assigned_to_user_id,
                 'assigned_to_client_id' => $request->assigned_to_client_id,
                 'assigned_to_project_id' => $request->assigned_to_project_id,
+                'assigned_to_external_individual' => $request->assigned_to_external_individual,
                 'transaction_date' => $request->transaction_date,
                 'expected_return_date' => $request->expected_return_date,
                 'notes' => $request->notes,

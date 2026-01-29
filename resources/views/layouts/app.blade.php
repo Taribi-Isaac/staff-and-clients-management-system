@@ -48,6 +48,7 @@
                     @endif
                     <li><a href="{{ route('employees.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Employees</a></li>
                     <li><a href="{{ route('clients.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Clients</a></li>
+                    <li><a href="{{ route('tasks.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Tasks</a></li>
                     <li><a href="{{ route('issues.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Issues</a></li>
                     @if(auth()->user() && auth()->user()->hasRole('super-admin'))
                     <li><a href="{{ route('admin.index') }}" class="block px-4 py-2 hover:bg-gray-700 rounded">Admins</a></li>
