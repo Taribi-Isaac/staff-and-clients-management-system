@@ -115,6 +115,32 @@ class Task extends Model
         return $this->assignedUsers()->where('users.id', $userId)->exists();
     }
 
+    /**
+     * Check if a user can edit this task
+     * Only the creator or assigned users can edit
+     */
+    public function canEdit($userId = null): bool
+    {
+        $userId = $userId ?? auth()->id();
+        
+        if (!$userId) {
+            return false;
+        }
+
+        // Creator can always edit
+        if ($this->created_by === $userId) {
+            return true;
+        }
+
+        // Check if relationship is loaded (more efficient)
+        if ($this->relationLoaded('assignedUsers')) {
+            return $this->assignedUsers->contains('id', $userId);
+        }
+
+        // Fallback to database query if relationship not loaded
+        return $this->isAssignedTo($userId);
+    }
+
     public function getCompletionRate(): float
     {
         $totalSubtasks = $this->subtasks()->count();

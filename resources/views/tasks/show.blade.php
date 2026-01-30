@@ -48,8 +48,15 @@
                 </div>
             </div>
             <div class="flex gap-2">
-                @if($task->created_by === auth()->id())
+                @if($task->canEdit())
                     <a href="{{ route('tasks.edit', $task->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition">Edit</a>
+                @endif
+                @if($task->created_by === auth()->id())
+                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this task? This action cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">Delete</button>
+                    </form>
                 @endif
                 <a href="{{ route('tasks.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">Back to List</a>
             </div>

@@ -223,15 +223,16 @@ class TaskController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * Only the creator or assigned users can edit tasks.
      */
     public function edit($id)
     {
         $task = Task::with(['assignedUsers', 'subtasks'])->findOrFail($id);
-        
-        // Check if user can edit (created by them)
-        if ($task->created_by !== auth()->id()) {
+
+        // Check if user can edit (creator or assigned user)
+        if (!$task->canEdit()) {
             return redirect()->route('tasks.show', $task->id)
-                ->with('error', 'You can only edit tasks you created.');
+                ->with('error', 'You can only edit tasks you created or are assigned to.');
         }
 
         $users = User::all();
@@ -242,15 +243,16 @@ class TaskController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Only the creator or assigned users can edit tasks.
      */
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
 
-        // Check if user can edit
-        if ($task->created_by !== auth()->id()) {
+        // Check if user can edit (creator or assigned user)
+        if (!$task->canEdit()) {
             return redirect()->route('tasks.show', $task->id)
-                ->with('error', 'You can only edit tasks you created.');
+                ->with('error', 'You can only edit tasks you created or are assigned to.');
         }
 
         $validated = $request->validate([
@@ -294,12 +296,13 @@ class TaskController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Only the task creator can delete tasks at any time.
      */
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
 
-        // Check if user can delete (created by them)
+        // Only the creator can delete tasks
         if ($task->created_by !== auth()->id()) {
             return redirect()->route('tasks.index')
                 ->with('error', 'You can only delete tasks you created.');

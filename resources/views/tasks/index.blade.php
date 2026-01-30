@@ -211,8 +211,15 @@
                     <td class="px-6 py-4">
                         <div class="flex gap-2">
                             <a href="{{ route('tasks.show', $task->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">View</a>
-                            @if($task->created_by === auth()->id())
+                            @if($task->canEdit())
                                 <a href="{{ route('tasks.edit', $task->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">Edit</a>
+                            @endif
+                            @if($task->created_by === auth()->id())
+                                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this task? This action cannot be undone.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                                </form>
                             @endif
                         </div>
                     </td>
