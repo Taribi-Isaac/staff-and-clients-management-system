@@ -171,7 +171,8 @@ class InvoiceController extends Controller
             'recurring_start_date' => $isRecurring ? ($validated['recurring_start_date'] ?? $validated['invoice_date']) : null,
             'recurring_end_date' => $isRecurring ? ($validated['recurring_end_date'] ?? null) : null,
             'next_recurring_date' => $nextRecurringDate,
-            'notification_days_before' => $isRecurring ? ($validated['notification_days_before'] ?? config('invoices.recurring.notification_days_before', 3)) : null,
+            // Always set notification_days_before to avoid null constraint violation (default 3)
+            'notification_days_before' => $isRecurring ? ($validated['notification_days_before'] ?? config('invoices.recurring.notification_days_before', 3)) : config('invoices.recurring.notification_days_before', 3),
         ]);
 
         // Create invoice items
@@ -309,7 +310,8 @@ class InvoiceController extends Controller
             $nextRecurringDate = null;
         }
 
-        $invoice->update([
+        // Prepare update data
+        $updateData = [
             'type' => $validated['type'],
             'title' => $validated['title'] ?? null,
             'client_id' => $validated['client_id'] ?? null,
@@ -332,8 +334,17 @@ class InvoiceController extends Controller
             'recurring_start_date' => $isRecurring ? ($validated['recurring_start_date'] ?? $invoice->recurring_start_date ?? $validated['invoice_date']) : null,
             'recurring_end_date' => $isRecurring ? ($validated['recurring_end_date'] ?? null) : null,
             'next_recurring_date' => $nextRecurringDate,
-            'notification_days_before' => $isRecurring ? ($validated['notification_days_before'] ?? $invoice->notification_days_before ?? config('invoices.recurring.notification_days_before', 3)) : null,
-        ]);
+        ];
+
+        // Handle notification_days_before - always set a value (default 3) to avoid null constraint violation
+        if ($isRecurring) {
+            $updateData['notification_days_before'] = $validated['notification_days_before'] ?? $invoice->notification_days_before ?? config('invoices.recurring.notification_days_before', 3);
+        } else {
+            // For non-recurring invoices, keep existing value or set default
+            $updateData['notification_days_before'] = $invoice->notification_days_before ?? config('invoices.recurring.notification_days_before', 3);
+        }
+
+        $invoice->update($updateData);
 
         // Delete existing items and create new ones
         $invoice->items()->delete();
