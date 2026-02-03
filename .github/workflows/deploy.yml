@@ -65,6 +65,24 @@ jobs:
             --exclude='deploy' \
             . deploy/
 
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v1.0.3
+        id: ssh-test
+        continue-on-error: true
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          timeout: 60s
+          command_timeout: 30s
+          script: |
+            echo "✅ SSH connection successful!"
+            pwd
+            whoami
+            hostname
+            echo "Testing connection from GitHub Actions..."
+
       - name: Deploy to cPanel via SSH
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -75,6 +93,11 @@ jobs:
           source: "deploy/*"
           target: "~/site_files"
           strip_components: 1
+          timeout: 300s
+          command_timeout: 120s
+          debug: true
+          overwrite: true
+          rm: false
 
       - name: Run deployment commands on server
         uses: appleboy/ssh-action@v1.0.3
@@ -83,6 +106,8 @@ jobs:
           username: ${{ secrets.CPANEL_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_KEY }}
           port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          timeout: 300s
+          command_timeout: 180s
           script: |
             cd ~/site_files
             
@@ -132,6 +157,11 @@ jobs:
           source: "public/*"
           target: "~/public_html/control.raslordeckltd.com"
           strip_components: 1
+          timeout: 300s
+          command_timeout: 120s
+          debug: true
+          overwrite: true
+          rm: false
 
       - name: Create index.php wrapper and fix paths
         uses: appleboy/ssh-action@v1.0.3
@@ -140,6 +170,8 @@ jobs:
           username: ${{ secrets.CPANEL_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_KEY }}
           port: ${{ secrets.CPANEL_SSH_PORT || 22 }}
+          timeout: 60s
+          command_timeout: 30s
           script: |
             # Create index.php that points to Laravel app
             cat > ~/public_html/control.raslordeckltd.com/index.php << 'EOF'
