@@ -24,6 +24,7 @@ class InvoiceController extends Controller
         $query = $request->input('search');
         $type = $request->input('type');
         $status = $request->input('status');
+        $recurring = $request->input('recurring');
 
         $invoices = Invoice::when($query, function ($q) use ($query) {
             $q->where('invoice_number', 'LIKE', "%{$query}%")
@@ -35,6 +36,9 @@ class InvoiceController extends Controller
         })
         ->when($status, function ($q) use ($status) {
             $q->where('status', $status);
+        })
+        ->when($recurring !== null, function ($q) use ($recurring) {
+            $q->where('is_recurring', $recurring == '1');
         })
         ->with('items')
         ->orderBy('created_at', 'desc')
@@ -84,6 +88,12 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string|max:500',
             'items.*.quantity' => 'required|numeric|min:0.01',
             'items.*.unit_price' => 'required|numeric|min:0',
+            // Recurring fields
+            'is_recurring' => 'nullable|boolean',
+            'recurring_frequency' => 'nullable|in:weekly,biweekly,monthly,quarterly,yearly',
+            'recurring_start_date' => 'nullable|date',
+            'recurring_end_date' => 'nullable|date|after_or_equal:recurring_start_date',
+            'notification_days_before' => 'nullable|integer|min:0|max:30',
         ]);
 
         // Calculate totals
@@ -109,6 +119,33 @@ class InvoiceController extends Controller
         // Generate invoice number based on type
         $invoiceNumber = Invoice::generateInvoiceNumber($validated['type']);
         
+        // Handle recurring invoice settings
+        $isRecurring = $request->has('is_recurring') && $request->boolean('is_recurring');
+        $nextRecurringDate = null;
+        
+        if ($isRecurring && !empty($validated['recurring_frequency']) && !empty($validated['due_date'])) {
+            $dueDate = \Carbon\Carbon::parse($validated['due_date']);
+            $frequency = $validated['recurring_frequency'];
+            
+            switch ($frequency) {
+                case 'weekly':
+                    $nextRecurringDate = $dueDate->copy()->addWeek();
+                    break;
+                case 'biweekly':
+                    $nextRecurringDate = $dueDate->copy()->addWeeks(2);
+                    break;
+                case 'monthly':
+                    $nextRecurringDate = $dueDate->copy()->addMonth();
+                    break;
+                case 'quarterly':
+                    $nextRecurringDate = $dueDate->copy()->addMonths(3);
+                    break;
+                case 'yearly':
+                    $nextRecurringDate = $dueDate->copy()->addYear();
+                    break;
+            }
+        }
+        
         $invoice = Invoice::create([
             'invoice_number' => $invoiceNumber,
             'type' => $validated['type'],
@@ -128,6 +165,13 @@ class InvoiceController extends Controller
             'total' => $total,
             'status' => $validated['status'],
             'created_by' => auth()->id(),
+            // Recurring fields
+            'is_recurring' => $isRecurring,
+            'recurring_frequency' => $isRecurring ? ($validated['recurring_frequency'] ?? null) : null,
+            'recurring_start_date' => $isRecurring ? ($validated['recurring_start_date'] ?? $validated['invoice_date']) : null,
+            'recurring_end_date' => $isRecurring ? ($validated['recurring_end_date'] ?? null) : null,
+            'next_recurring_date' => $nextRecurringDate,
+            'notification_days_before' => $isRecurring ? ($validated['notification_days_before'] ?? config('invoices.recurring.notification_days_before', 3)) : null,
         ]);
 
         // Create invoice items
@@ -156,7 +200,7 @@ class InvoiceController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $invoice = Invoice::with(['items', 'client', 'creator'])->findOrFail($id);
+        $invoice = Invoice::with(['items', 'client', 'creator', 'childInvoices', 'parentInvoice', 'notifications'])->findOrFail($id);
         return view('invoices.show', compact('invoice'));
     }
 
@@ -205,6 +249,12 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string|max:500',
             'items.*.quantity' => 'required|numeric|min:0.01',
             'items.*.unit_price' => 'required|numeric|min:0',
+            // Recurring fields
+            'is_recurring' => 'nullable|boolean',
+            'recurring_frequency' => 'nullable|in:weekly,biweekly,monthly,quarterly,yearly',
+            'recurring_start_date' => 'nullable|date',
+            'recurring_end_date' => 'nullable|date|after_or_equal:recurring_start_date',
+            'notification_days_before' => 'nullable|integer|min:0|max:30',
         ]);
 
         // Calculate totals
@@ -227,6 +277,38 @@ class InvoiceController extends Controller
             }
         }
 
+        // Handle recurring invoice settings
+        $isRecurring = $request->has('is_recurring') && $request->boolean('is_recurring');
+        $nextRecurringDate = $invoice->next_recurring_date;
+        
+        if ($isRecurring && !empty($validated['recurring_frequency']) && !empty($validated['due_date'])) {
+            $dueDate = \Carbon\Carbon::parse($validated['due_date']);
+            $frequency = $validated['recurring_frequency'];
+            
+            // Only update next_recurring_date if it's not already set or if due date changed
+            if (!$nextRecurringDate || $invoice->due_date != $validated['due_date']) {
+                switch ($frequency) {
+                    case 'weekly':
+                        $nextRecurringDate = $dueDate->copy()->addWeek();
+                        break;
+                    case 'biweekly':
+                        $nextRecurringDate = $dueDate->copy()->addWeeks(2);
+                        break;
+                    case 'monthly':
+                        $nextRecurringDate = $dueDate->copy()->addMonth();
+                        break;
+                    case 'quarterly':
+                        $nextRecurringDate = $dueDate->copy()->addMonths(3);
+                        break;
+                    case 'yearly':
+                        $nextRecurringDate = $dueDate->copy()->addYear();
+                        break;
+                }
+            }
+        } elseif (!$isRecurring) {
+            $nextRecurringDate = null;
+        }
+
         $invoice->update([
             'type' => $validated['type'],
             'title' => $validated['title'] ?? null,
@@ -244,6 +326,13 @@ class InvoiceController extends Controller
             'discount' => $validated['discount'] ?? 0,
             'total' => $total,
             'status' => $validated['status'],
+            // Recurring fields
+            'is_recurring' => $isRecurring,
+            'recurring_frequency' => $isRecurring ? ($validated['recurring_frequency'] ?? $invoice->recurring_frequency) : null,
+            'recurring_start_date' => $isRecurring ? ($validated['recurring_start_date'] ?? $invoice->recurring_start_date ?? $validated['invoice_date']) : null,
+            'recurring_end_date' => $isRecurring ? ($validated['recurring_end_date'] ?? null) : null,
+            'next_recurring_date' => $nextRecurringDate,
+            'notification_days_before' => $isRecurring ? ($validated['notification_days_before'] ?? $invoice->notification_days_before ?? config('invoices.recurring.notification_days_before', 3)) : null,
         ]);
 
         // Delete existing items and create new ones
@@ -344,5 +433,66 @@ class InvoiceController extends Controller
         $filename = $invoice->invoice_number . '.pdf';
 
         return $dompdf->stream($filename);
+    }
+
+    /**
+     * Toggle recurring invoice pause/resume
+     */
+    public function toggleRecurring($id)
+    {
+        // Only admins and super-admins can toggle recurring
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('super-admin'))) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $invoice = Invoice::findOrFail($id);
+
+        if (!$invoice->is_recurring) {
+            return redirect()->route('invoices.show', $invoice->id)
+                ->with('error', 'This invoice is not a recurring invoice.');
+        }
+
+        $invoice->update([
+            'is_recurring_paused' => !$invoice->is_recurring_paused,
+        ]);
+
+        $status = $invoice->is_recurring_paused ? 'paused' : 'resumed';
+        
+        return redirect()->route('invoices.show', $invoice->id)
+            ->with('success', "Recurring invoice has been {$status} successfully.");
+    }
+
+    /**
+     * Manually generate next invoice for recurring invoice
+     */
+    public function generateNext($id)
+    {
+        // Only admins and super-admins can generate next invoice
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('super-admin'))) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $invoice = Invoice::findOrFail($id);
+
+        if (!$invoice->is_recurring) {
+            return redirect()->route('invoices.show', $invoice->id)
+                ->with('error', 'This invoice is not a recurring invoice.');
+        }
+
+        if ($invoice->parent_invoice_id) {
+            return redirect()->route('invoices.show', $invoice->id)
+                ->with('error', 'Cannot generate next invoice from a child invoice. Please use the parent invoice.');
+        }
+
+        $notificationService = app(\App\Services\RecurringInvoiceNotificationService::class);
+        $newInvoice = $notificationService->generateNextInvoice($invoice);
+
+        if ($newInvoice) {
+            return redirect()->route('invoices.show', $newInvoice->id)
+                ->with('success', 'Next invoice generated successfully!');
+        }
+
+        return redirect()->route('invoices.show', $invoice->id)
+            ->with('error', 'Failed to generate next invoice. Please check if the invoice can be generated.');
     }
 }

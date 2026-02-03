@@ -24,6 +24,87 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- Recurring Invoice Information -->
+    @if($invoice->is_recurring)
+    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-6 rounded">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-lg font-semibold text-indigo-800 mb-2">🔄 Recurring Invoice</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <span class="font-semibold text-gray-700">Frequency:</span>
+                        <span class="ml-2 text-gray-600 capitalize">{{ str_replace('_', ' ', $invoice->recurring_frequency ?? 'N/A') }}</span>
+                    </div>
+                    @if($invoice->next_recurring_date)
+                    <div>
+                        <span class="font-semibold text-gray-700">Next Invoice:</span>
+                        <span class="ml-2 text-gray-600">{{ $invoice->next_recurring_date->format('M d, Y') }}</span>
+                    </div>
+                    @endif
+                    @if($invoice->recurring_end_date)
+                    <div>
+                        <span class="font-semibold text-gray-700">Ends:</span>
+                        <span class="ml-2 text-gray-600">{{ $invoice->recurring_end_date->format('M d, Y') }}</span>
+                    </div>
+                    @endif
+                    <div>
+                        <span class="font-semibold text-gray-700">Notification:</span>
+                        <span class="ml-2 text-gray-600">{{ $invoice->notification_days_before ?? 3 }} days before due</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-700">Status:</span>
+                        <span class="ml-2 {{ $invoice->is_recurring_paused ? 'text-yellow-600' : 'text-green-600' }}">
+                            {{ $invoice->is_recurring_paused ? '⏸️ Paused' : '▶️ Active' }}
+                        </span>
+                    </div>
+                    @if($invoice->parent_invoice_id)
+                    <div>
+                        <span class="font-semibold text-gray-700">Parent Invoice:</span>
+                        <a href="{{ route('invoices.show', $invoice->parent_invoice_id) }}" class="ml-2 text-indigo-600 hover:underline">
+                            View Parent
+                        </a>
+                    </div>
+                    @endif
+                    @if($invoice->childInvoices->count() > 0)
+                    <div>
+                        <span class="font-semibold text-gray-700">Generated Invoices:</span>
+                        <span class="ml-2 text-gray-600">{{ $invoice->childInvoices->count() }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                @if(!$invoice->parent_invoice_id)
+                <form action="{{ route('invoices.toggle-recurring', $invoice->id) }}" method="POST" class="inline">
+                    @csrf
+                    @if($invoice->is_recurring_paused)
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition text-sm">
+                            ▶ Resume
+                        </button>
+                    @else
+                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition text-sm">
+                            ⏸ Pause
+                        </button>
+                    @endif
+                </form>
+                <form action="{{ route('invoices.generate-next', $invoice->id) }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-indigo-600 transition text-sm" onclick="return confirm('Generate next invoice for this recurring invoice?')">
+                        ➕ Generate Next
+                    </button>
+                </form>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Invoice Preview -->
     <div class="bg-white p-8 rounded-lg shadow-md">
         <!-- Header -->
@@ -148,6 +229,87 @@
             <p>Visit us: www.raslordeckltd.com</p>
         </div>
     </div>
+
+    <!-- Child Invoices (Generated from this recurring invoice) -->
+    @if($invoice->is_recurring && $invoice->childInvoices && $invoice->childInvoices->count() > 0)
+    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 class="text-xl font-semibold mb-4">Generated Invoices</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Invoice #</th>
+                        <th class="px-4 py-2 text-left">Date</th>
+                        <th class="px-4 py-2 text-left">Due Date</th>
+                        <th class="px-4 py-2 text-left">Status</th>
+                        <th class="px-4 py-2 text-left">Total</th>
+                        <th class="px-4 py-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($invoice->childInvoices as $childInvoice)
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ $childInvoice->invoice_number }}</td>
+                        <td class="px-4 py-2">{{ $childInvoice->invoice_date->format('M d, Y') }}</td>
+                        <td class="px-4 py-2">{{ $childInvoice->due_date ? $childInvoice->due_date->format('M d, Y') : 'N/A' }}</td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 rounded text-xs {{ $childInvoice->status == 'paid' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                {{ ucfirst($childInvoice->status) }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2 font-semibold">₦{{ number_format($childInvoice->total, 2) }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{{ route('invoices.show', $childInvoice->id) }}" class="text-blue-600 hover:underline text-sm">View</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
+    <!-- Notification History -->
+    @if($invoice->is_recurring && $invoice->notifications && $invoice->notifications->count() > 0)
+    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 class="text-xl font-semibold mb-4">Notification History</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Sent To</th>
+                        <th class="px-4 py-2 text-left">Scheduled For</th>
+                        <th class="px-4 py-2 text-left">Sent At</th>
+                        <th class="px-4 py-2 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($invoice->notifications->sortByDesc('created_at') as $notification)
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 rounded text-xs {{ $notification->notification_type == 'client_reminder' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
+                                {{ str_replace('_', ' ', ucfirst($notification->notification_type)) }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2">{{ $notification->sent_to }}</td>
+                        <td class="px-4 py-2">{{ $notification->scheduled_for_date->format('M d, Y') }}</td>
+                        <td class="px-4 py-2">{{ $notification->sent_at ? $notification->sent_at->format('M d, Y H:i') : 'N/A' }}</td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 rounded text-xs {{ $notification->status == 'sent' ? 'bg-green-100 text-green-800' : ($notification->status == 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                {{ ucfirst($notification->status) }}
+                            </span>
+                            @if($notification->error_message)
+                                <div class="text-xs text-red-600 mt-1">{{ Str::limit($notification->error_message, 50) }}</div>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 

@@ -184,6 +184,60 @@
             </div>
         </div>
 
+        <!-- Recurring Invoice Settings -->
+        <div class="mb-6 border-t pt-6">
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" name="is_recurring" id="is_recurring" value="1" {{ old('is_recurring') ? 'checked' : '' }} class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
+                    <span class="ml-2 text-sm font-medium text-gray-700">Make this a recurring invoice</span>
+                </label>
+            </div>
+
+            <div id="recurringSettings" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="recurring_frequency" class="block text-sm font-medium text-gray-700 mb-2">Recurring Frequency *</label>
+                    <select name="recurring_frequency" id="recurring_frequency" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Select frequency</option>
+                        <option value="weekly" {{ old('recurring_frequency') == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                        <option value="biweekly" {{ old('recurring_frequency') == 'biweekly' ? 'selected' : '' }}>Bi-weekly</option>
+                        <option value="monthly" {{ old('recurring_frequency') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                        <option value="quarterly" {{ old('recurring_frequency') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                        <option value="yearly" {{ old('recurring_frequency') == 'yearly' ? 'selected' : '' }}>Yearly</option>
+                    </select>
+                    @error('recurring_frequency')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="notification_days_before" class="block text-sm font-medium text-gray-700 mb-2">Notification Days Before Due Date</label>
+                    <input type="number" name="notification_days_before" id="notification_days_before" value="{{ old('notification_days_before', 3) }}" min="0" max="30" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <p class="text-xs text-gray-500 mt-1">Number of days before due date to send reminder (default: 3)</p>
+                    @error('notification_days_before')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="recurring_start_date" class="block text-sm font-medium text-gray-700 mb-2">Recurring Start Date</label>
+                    <input type="date" name="recurring_start_date" id="recurring_start_date" value="{{ old('recurring_start_date') }}" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <p class="text-xs text-gray-500 mt-1">Leave empty to use invoice date</p>
+                    @error('recurring_start_date')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="recurring_end_date" class="block text-sm font-medium text-gray-700 mb-2">Recurring End Date (Optional)</label>
+                    <input type="date" name="recurring_end_date" id="recurring_end_date" value="{{ old('recurring_end_date') }}" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <p class="text-xs text-gray-500 mt-1">Leave empty for no end date</p>
+                    @error('recurring_end_date')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <!-- Submit Button -->
         <div class="mt-6 text-center">
             <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-md shadow-md hover:bg-red-700 transition text-lg font-semibold">Create Invoice</button>
@@ -297,6 +351,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial calculation
     calculateTotals();
+
+    // Toggle recurring settings visibility
+    const isRecurringCheckbox = document.getElementById('is_recurring');
+    const recurringSettings = document.getElementById('recurringSettings');
+    
+    function toggleRecurringSettings() {
+        if (isRecurringCheckbox.checked) {
+            recurringSettings.classList.remove('hidden');
+            document.getElementById('recurring_frequency').required = true;
+        } else {
+            recurringSettings.classList.add('hidden');
+            document.getElementById('recurring_frequency').required = false;
+        }
+    }
+    
+    isRecurringCheckbox.addEventListener('change', toggleRecurringSettings);
+    
+    // Initialize on page load
+    toggleRecurringSettings();
 });
 </script>
 @endsection

@@ -30,6 +30,12 @@
                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
             </select>
 
+            <select name="recurring" class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                <option value="">All Invoices</option>
+                <option value="1" {{ request('recurring') == '1' ? 'selected' : '' }}>Recurring Only</option>
+                <option value="0" {{ request('recurring') == '0' ? 'selected' : '' }}>Non-Recurring Only</option>
+            </select>
+
             <button type="submit" class="bg-red-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-red-700 transition">Search</button>
             <a href="{{ route('invoices.index') }}" class="bg-gray-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-gray-600 transition">Clear</a>
         </form>
@@ -64,7 +70,19 @@
             <tbody class="divide-y divide-gray-200">
                 @forelse($invoices as $invoice)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium">{{ $invoice->invoice_number }}</td>
+                    <td class="px-6 py-4 font-medium">
+                        {{ $invoice->invoice_number }}
+                        @if($invoice->is_recurring)
+                            <span class="ml-2 px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-semibold" title="Recurring Invoice">
+                                🔄 Recurring
+                            </span>
+                            @if($invoice->is_recurring_paused)
+                                <span class="ml-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs" title="Paused">
+                                    ⏸️ Paused
+                                </span>
+                            @endif
+                        @endif
+                    </td>
                     <td class="px-6 py-4">
                         @php
                             $typeColors = [
@@ -79,7 +97,14 @@
                     </td>
                     <td class="px-6 py-4">{{ $invoice->client_name ?? 'N/A' }}</td>
                     <td class="px-6 py-4">{{ $invoice->invoice_date->format('M d, Y') }}</td>
-                    <td class="px-6 py-4">{{ $invoice->due_date ? $invoice->due_date->format('M d, Y') : 'N/A' }}</td>
+                    <td class="px-6 py-4">
+                        {{ $invoice->due_date ? $invoice->due_date->format('M d, Y') : 'N/A' }}
+                        @if($invoice->is_recurring && $invoice->next_recurring_date)
+                            <div class="text-xs text-indigo-600 mt-1">
+                                Next: {{ $invoice->next_recurring_date->format('M d, Y') }}
+                            </div>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 font-semibold">₦{{ number_format($invoice->total, 2) }}</td>
                     <td class="px-6 py-4">
                         @php

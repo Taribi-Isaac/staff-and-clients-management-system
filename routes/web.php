@@ -86,6 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('invoices', InvoiceController::class);
     Route::get('/invoices/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoices.duplicate');
     Route::get('/invoices/{id}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
+    Route::post('/invoices/{id}/toggle-recurring', [InvoiceController::class, 'toggleRecurring'])->name('invoices.toggle-recurring');
+    Route::post('/invoices/{id}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
 
     // Project Routes
     Route::resource('projects', ProjectController::class);
