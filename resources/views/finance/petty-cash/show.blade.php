@@ -175,6 +175,4 @@ function closeAuthorizationModal() {
 }
 </script>
 @endsection
-</div>
-@endsection
 

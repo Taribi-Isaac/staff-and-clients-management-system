@@ -105,19 +105,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/general-ledger', [GeneralLedgerController::class, 'index'])->name('general-ledger.index');
     Route::get('/general-ledger/export', [GeneralLedgerController::class, 'export'])->name('general-ledger.export');
     Route::resource('cash-book', CashBookController::class);
+    
+    // Petty Cash Routes - Export routes must be defined BEFORE resource route
+    Route::get('/petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export');
     Route::post('/petty-cash/{id}/authorize', [PettyCashController::class, 'authorize'])->name('petty-cash.authorize');
     Route::get('/petty-cash/employee/{employeeId}', [PettyCashController::class, 'employeeTransactions'])->name('petty-cash.employee');
     Route::get('/petty-cash/employee/{employeeId}/export', [PettyCashController::class, 'exportEmployeeTransactions'])->name('petty-cash.employee.export');
     Route::resource('petty-cash', PettyCashController::class);
+    
     Route::resource('sales-book', SalesBookController::class);
     Route::resource('purchases-book', PurchasesBookController::class);
     Route::resource('ar-ledger', ArLedgerController::class);
     Route::resource('ap-ledger', ApLedgerController::class);
     Route::resource('payroll-book', PayrollBookController::class);
     
-    // Export routes for financial books
+    // Export routes for financial books (must be before resource routes)
     Route::get('/cash-book/export', [CashBookController::class, 'export'])->name('cash-book.export');
-    Route::get('/petty-cash/export', [PettyCashController::class, 'export'])->name('petty-cash.export');
     Route::get('/sales-book/export', [SalesBookController::class, 'export'])->name('sales-book.export');
     Route::get('/purchases-book/export', [PurchasesBookController::class, 'export'])->name('purchases-book.export');
     Route::get('/ar-ledger/export', [ArLedgerController::class, 'export'])->name('ar-ledger.export');
