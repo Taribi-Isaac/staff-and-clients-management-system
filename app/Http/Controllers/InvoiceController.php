@@ -378,36 +378,43 @@ class InvoiceController extends Controller
         try {
             // Use a fresh query to avoid prepared statement issues
             $invoice = Invoice::with(['items', 'childInvoices', 'notifications'])->findOrFail($id);
+            $invoiceType = $invoice->type;
+            $invoiceId = $invoice->id;
             
             // Use database transaction to ensure data integrity
-            DB::transaction(function () use ($invoice) {
+            // Use unprepared SQL statements to completely bypass MySQL prepared statement cache issues
+            DB::transaction(function () use ($invoiceId) {
+                // Refresh connection to clear any stale prepared statements
+                DB::connection()->reconnect();
+                
                 // Delete recurring invoice notifications first (they reference the invoice)
-                $invoice->notifications()->delete();
+                // Use unprepared to bypass prepared statement cache
+                DB::unprepared('DELETE FROM recurring_invoice_notifications WHERE invoice_id = ' . (int)$invoiceId);
                 
                 // Handle child invoices - if this is a parent invoice with children
-                if ($invoice->childInvoices()->count() > 0) {
-                    // Option 1: Delete all child invoices (cascade)
-                    $invoice->childInvoices()->delete();
-                    // Option 2: Or set parent_invoice_id to null for child invoices
-                    // $invoice->childInvoices()->update(['parent_invoice_id' => null]);
+                // Use selectOne with raw SQL (not unprepared, as we need the result)
+                $result = DB::selectOne('SELECT COUNT(*) as count FROM invoices WHERE parent_invoice_id = ' . (int)$invoiceId);
+                if ($result && $result->count > 0) {
+                    // Delete all child invoices (cascade) using unprepared
+                    DB::unprepared('DELETE FROM invoices WHERE parent_invoice_id = ' . (int)$invoiceId);
                 }
                 
-                // Delete invoice items
-                $invoice->items()->delete();
+                // Delete invoice items using unprepared SQL
+                DB::unprepared('DELETE FROM invoice_items WHERE invoice_id = ' . (int)$invoiceId);
                 
-                // Finally, delete the invoice itself
-                // Use fresh query to avoid prepared statement cache issues
-                DB::table('invoices')->where('id', $invoice->id)->delete();
+                // Finally, delete the invoice itself using unprepared SQL to bypass prepared statement cache entirely
+                DB::unprepared('DELETE FROM invoices WHERE id = ' . (int)$invoiceId);
             });
 
             return redirect()->route('invoices.index')
-                ->with('success', ucfirst($invoice->type) . ' deleted successfully!');
+                ->with('success', ucfirst($invoiceType) . ' deleted successfully!');
                 
         } catch (\Exception $e) {
             Log::error('Invoice deletion failed: ' . $e->getMessage(), [
                 'invoice_id' => $id,
                 'user_id' => auth()->id(),
-                'exception' => $e
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
             ]);
             
             return redirect()->route('invoices.index')
