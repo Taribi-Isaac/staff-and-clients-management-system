@@ -6,6 +6,8 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Clients;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -373,12 +375,44 @@ class InvoiceController extends Controller
             abort(403, 'Unauthorized action. Only super-admins can delete invoices.');
         }
 
-        $invoice = Invoice::findOrFail($id);
-        $invoice->items()->delete();
-        $invoice->delete();
+        try {
+            // Use a fresh query to avoid prepared statement issues
+            $invoice = Invoice::with(['items', 'childInvoices', 'notifications'])->findOrFail($id);
+            
+            // Use database transaction to ensure data integrity
+            DB::transaction(function () use ($invoice) {
+                // Delete recurring invoice notifications first (they reference the invoice)
+                $invoice->notifications()->delete();
+                
+                // Handle child invoices - if this is a parent invoice with children
+                if ($invoice->childInvoices()->count() > 0) {
+                    // Option 1: Delete all child invoices (cascade)
+                    $invoice->childInvoices()->delete();
+                    // Option 2: Or set parent_invoice_id to null for child invoices
+                    // $invoice->childInvoices()->update(['parent_invoice_id' => null]);
+                }
+                
+                // Delete invoice items
+                $invoice->items()->delete();
+                
+                // Finally, delete the invoice itself
+                // Use fresh query to avoid prepared statement cache issues
+                DB::table('invoices')->where('id', $invoice->id)->delete();
+            });
 
-        return redirect()->route('invoices.index')
-            ->with('success', ucfirst($invoice->type) . ' deleted successfully!');
+            return redirect()->route('invoices.index')
+                ->with('success', ucfirst($invoice->type) . ' deleted successfully!');
+                
+        } catch (\Exception $e) {
+            Log::error('Invoice deletion failed: ' . $e->getMessage(), [
+                'invoice_id' => $id,
+                'user_id' => auth()->id(),
+                'exception' => $e
+            ]);
+            
+            return redirect()->route('invoices.index')
+                ->with('error', 'Failed to delete invoice. Please try again or contact support.');
+        }
     }
 
     /**
