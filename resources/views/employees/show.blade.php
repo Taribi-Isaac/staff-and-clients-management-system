@@ -58,6 +58,20 @@
             </div>
 
             <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Station</label>
+                @if($employees->station)
+                    <div class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                        <div class="font-medium">{{ $employees->station->name ?? 'Station #' . $employees->station->id }}</div>
+                        <div class="text-sm text-gray-600">{{ $employees->station->partner->name }}</div>
+                        <div class="text-sm text-gray-500">{{ $employees->station->address }}</div>
+                        <a href="{{ route('stations.show', $employees->station->id) }}" class="text-blue-600 hover:underline text-sm mt-1 inline-block">View Station Details</a>
+                    </div>
+                @else
+                    <p class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-400">Not assigned to any station</p>
+                @endif
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">State of Origin</label>
                 <p class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">{{ $employees->state_of_origin }}</p>
             </div>

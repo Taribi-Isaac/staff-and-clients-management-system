@@ -10,7 +10,7 @@
 
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('name') border-red-500 @enderror" value="{{ old('name') }}" required>
+                <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('name') border-red-500 @enderror" value="{{ old('name', $employees->name) }}" required>
                 @error('name')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -18,7 +18,7 @@
 
             <div class="mb-4">
                 <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                <input type="text" id="phone" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('phone') border-red-500 @enderror" value="{{ old('phone') }}" required>
+                <input type="text" id="phone" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('phone') border-red-500 @enderror" value="{{ old('phone', $employees->phone) }}" required>
                 @error('phone')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -26,7 +26,7 @@
 
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('email') border-red-500 @enderror" value="{{ old('email') }}" required>
+                <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('email') border-red-500 @enderror" value="{{ old('email', $employees->email) }}" required>
                 @error('email')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -34,7 +34,7 @@
 
             <div class="mb-4">
                 <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                <input type="date" id="start_date" name="start_date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('start_date') border-red-500 @enderror" value="{{ old('start_date') }}" required>
+                <input type="date" id="start_date" name="start_date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('start_date') border-red-500 @enderror" value="{{ old('start_date', $employees->start_date) }}" required>
                 @error('start_date')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -42,7 +42,7 @@
 
             <div class="mb-4">
                 <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                <input type="date" id="end_date" name="end_date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('end_date') border-red-500 @enderror" value="{{ old('end_date') }}">
+                <input type="date" id="end_date" name="end_date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('end_date') border-red-500 @enderror" value="{{ old('end_date', $employees->end_date) }}">
                 @error('end_date')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -50,7 +50,7 @@
 
             <div class="mb-4">
                 <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                <input type="text" id="role" name="role" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('role') border-red-500 @enderror" value="{{ old('role') }}" required>
+                <input type="text" id="role" name="role" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('role') border-red-500 @enderror" value="{{ old('role', $employees->role) }}" required>
                 @error('role')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -59,10 +59,10 @@
             <div class="mb-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                 <select id="status" name="status" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('status') border-red-500 @enderror" required>
-                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    <option value="leave" {{ old('status') == 'leave' ? 'selected' : '' }}>Leave</option>
-                    <option value="suspension" {{ old('status') == 'suspension' ? 'selected' : '' }}>Suspension</option>
+                    <option value="active" {{ old('status', $employees->status) == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ old('status', $employees->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    <option value="leave" {{ old('status', $employees->status) == 'leave' ? 'selected' : '' }}>Leave</option>
+                    <option value="suspension" {{ old('status', $employees->status) == 'suspension' ? 'selected' : '' }}>Suspension</option>
                 </select>
                 @error('status')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
@@ -72,11 +72,26 @@
             <div class="mb-4">
                 <label for="employment_type" class="block text-sm font-medium text-gray-700">Employment Type</label>
                 <select id="employment_type" name="employment_type" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('employment_type') border-red-500 @enderror" required>
-                    <option value="full-time" {{ old('employment_type') == 'full-time' ? 'selected' : '' }}>Full-Time</option>
-                    <option value="contract" {{ old('employment_type') == 'contract' ? 'selected' : '' }}>Contract</option>
-                    <option value="intern" {{ old('employment_type') == 'intern' ? 'selected' : '' }}>Intern</option>
+                    <option value="full-time" {{ old('employment_type', $employees->employment_type) == 'full-time' ? 'selected' : '' }}>Full-Time</option>
+                    <option value="contract" {{ old('employment_type', $employees->employment_type) == 'contract' ? 'selected' : '' }}>Contract</option>
+                    <option value="intern" {{ old('employment_type', $employees->employment_type) == 'intern' ? 'selected' : '' }}>Intern</option>
                 </select>
                 @error('employment_type')
+                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="station_id" class="block text-sm font-medium text-gray-700">Station</label>
+                <select id="station_id" name="station_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('station_id') border-red-500 @enderror">
+                    <option value="">-- Select Station (Optional) --</option>
+                    @foreach($stations as $station)
+                        <option value="{{ $station->id }}" {{ old('station_id', $employees->station_id) == $station->id ? 'selected' : '' }}>
+                            {{ $station->name ?? 'Station #' . $station->id }} - {{ $station->partner->name }} ({{ $station->address }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('station_id')
                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                 @enderror
             </div>

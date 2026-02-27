@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Employees extends Model
 {
@@ -21,6 +22,7 @@ class Employees extends Model
         'role',
         'status',
         'employment_type',
+        'station_id',
         'passport',
         'state_of_origin',
         'local_government_area',
@@ -50,5 +52,10 @@ class Employees extends Model
     public function payrollBookEntries(): HasMany
     {
         return $this->hasMany(PayrollBookEntry::class, 'employee_id');
+    }
+
+    public function station(): BelongsTo
+    {
+        return $this->belongsTo(Station::class);
     }
 }

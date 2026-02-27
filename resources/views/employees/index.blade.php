@@ -44,6 +44,7 @@
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Phone</th>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Email</th>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Role</th>
+                    <th class="px-6 py-4 text-left font-semibold text-gray-700">Station</th>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Passport</th>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Status</th>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">Actions</th>
@@ -57,6 +58,16 @@
                     <td class="px-6 py-4">{{ $member->phone }}</td>
                     <td class="px-6 py-4">{{ $member->email }}</td>
                     <td class="px-6 py-4">{{ $member->role }}</td>
+                    <td class="px-6 py-4">
+                        @if($member->station)
+                            <div class="text-sm">
+                                <div class="font-medium">{{ $member->station->name ?? 'Station #' . $member->station->id }}</div>
+                                <div class="text-gray-500">{{ $member->station->partner->name }}</div>
+                            </div>
+                        @else
+                            <span class="text-gray-400">N/A</span>
+                        @endif
+                    </td>
                     <td class="px-6 py-4">
     <img src="{{ $member->passport ? asset('storage/' . $member->passport) : asset('images/user.jpg') }}" 
          alt="Passport" 

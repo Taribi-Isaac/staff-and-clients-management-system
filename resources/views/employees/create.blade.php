@@ -82,6 +82,21 @@
             </div>
 
             <div class="mb-4">
+                <label for="station_id" class="block text-sm font-medium text-gray-700">Station</label>
+                <select id="station_id" name="station_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('station_id') border-red-500 @enderror">
+                    <option value="">-- Select Station (Optional) --</option>
+                    @foreach($stations as $station)
+                        <option value="{{ $station->id }}" {{ old('station_id') == $station->id ? 'selected' : '' }}>
+                            {{ $station->name ?? 'Station #' . $station->id }} - {{ $station->partner->name }} ({{ $station->address }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('station_id')
+                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
                 <label for="passport" class="block text-sm font-medium text-gray-700">Passport</label>
                 <input type="file" id="passport" name="passport" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('passport') border-red-500 @enderror">
                 @error('passport')

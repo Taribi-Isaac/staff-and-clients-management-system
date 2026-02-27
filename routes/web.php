@@ -23,6 +23,8 @@ use App\Http\Controllers\ApLedgerController;
 use App\Http\Controllers\PayrollBookController;
 use App\Http\Controllers\GeneralLedgerController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\StationController;
 use App\Models\Issues;
 use Illuminate\Support\Facades\Route;
 
@@ -135,6 +137,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks/{taskId}/subtasks', [TaskController::class, 'addSubtask'])->name('tasks.subtasks.store');
     Route::delete('/tasks/{taskId}/subtasks/{subtaskId}', [TaskController::class, 'deleteSubtask'])->name('tasks.subtasks.destroy');
     Route::post('/tasks/{taskId}/subtasks/{subtaskId}/toggle', [TaskController::class, 'toggleSubtask'])->name('tasks.subtasks.toggle');
+    
+    // Partners and Stations Routes
+    Route::resource('partners', PartnerController::class);
+    Route::resource('stations', StationController::class);
 });
 
 require __DIR__ . '/auth.php';

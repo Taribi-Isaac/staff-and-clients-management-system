@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employees;
+use App\Models\Station;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,7 +11,8 @@ class EmployeesController extends Controller
 {
     public function create()
     {
-        return view('employees.create');
+        $stations = Station::with('partner')->orderBy('name')->get();
+        return view('employees.create', compact('stations'));
     }
 
     public function store(Request $request)
@@ -78,19 +80,20 @@ class EmployeesController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $employees = Employees::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('status', 'like', "%{$search}%");
-        })->paginate(10);
+        $employees = Employees::with('station.partner')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
+            })->paginate(10);
 
         return view('employees.index', compact('employees'));
     }
 
     public function show($id)
     {
-        $employees = Employees::findOrFail($id);
+        $employees = Employees::with('station.partner')->findOrFail($id);
 
         return view('employees.show', compact('employees'));
     }
@@ -98,8 +101,8 @@ class EmployeesController extends Controller
     public function edit($id)
     {
         $employees = Employees::findOrFail($id);
-
-        return view('employees.edit', compact('employees'));
+        $stations = Station::with('partner')->orderBy('name')->get();
+        return view('employees.edit', compact('employees', 'stations'));
     }
 
     public function update(Request $request, $id)
@@ -113,6 +116,7 @@ class EmployeesController extends Controller
             'role' => 'required|string|max:255',
             'status' => 'required|in:active,inactive,leave,suspension',
             'employment_type' => 'required|in:full-time,contract,intern',
+            'station_id' => 'nullable|exists:stations,id',
             'passport' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'state_of_origin' => 'required|string|max:255',
             'local_government_area' => 'required|string|max:255',
