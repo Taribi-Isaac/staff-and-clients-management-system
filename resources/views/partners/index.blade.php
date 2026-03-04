@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <!-- Search and Actions -->
+    <!-- Search and Filters -->
     <div class="flex flex-wrap justify-between mb-6 gap-4">
         <form action="{{ route('partners.index') }}" method="GET" class="flex gap-2 flex-wrap">
             <input
@@ -29,75 +29,69 @@
             <button type="submit" class="bg-red-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-red-700 transition">Search</button>
             <a href="{{ route('partners.index') }}" class="bg-gray-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-gray-600 transition">Clear</a>
         </form>
-
-        <a href="{{ route('partners.create') }}" class="bg-red-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition">
-            Add New Partner
-        </a>
+        
+        <div class="flex gap-2">
+            <a href="{{ route('partners.create') }}" class="bg-red-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-red-700 transition">
+                Add Partner
+            </a>
+        </div>
     </div>
 
+    <!-- Success/Error Messages -->
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
-
     @if(session('error'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {{ session('error') }}
         </div>
     @endif
 
-    <!-- Partners Table -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+            <thead class="bg-red-600 text-white">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contacts</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stations</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th class="px-6 py-4 text-left font-semibold">Name</th>
+                    <th class="px-6 py-4 text-left font-semibold">Email</th>
+                    <th class="px-6 py-4 text-left font-semibold">Phone</th>
+                    <th class="px-6 py-4 text-left font-semibold">Contacts</th>
+                    <th class="px-6 py-4 text-left font-semibold">Stations</th>
+                    <th class="px-6 py-4 text-left font-semibold">Actions</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-200">
                 @forelse($partners as $partner)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ $partner->name }}</div>
+                    <td class="px-6 py-4 font-medium">
+                        <div>{{ $partner->name }}</div>
                         @if($partner->head_office_address)
-                            <div class="text-sm text-gray-500">{{ Str::limit($partner->head_office_address, 50) }}</div>
+                            <div class="text-xs text-gray-500">{{ Str::limit($partner->head_office_address, 50) }}</div>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $partner->email ?? 'N/A' }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $partner->phone ?? 'N/A' }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $partner->contacts->count() }} contact(s)</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $partner->stations->count() }} station(s)</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="{{ route('partners.show', $partner->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                        <a href="{{ route('partners.edit', $partner->id) }}" class="text-yellow-600 hover:text-yellow-900 mr-3">Edit</a>
-                        @if(auth()->user() && auth()->user()->hasRole('super-admin'))
-                        <form action="{{ route('partners.destroy', $partner->id) }}" method="POST" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this partner?')">Delete</button>
-                        </form>
-                        @endif
+                    <td class="px-6 py-4">{{ $partner->email ?? 'N/A' }}</td>
+                    <td class="px-6 py-4">{{ $partner->phone ?? 'N/A' }}</td>
+                    <td class="px-6 py-4">{{ $partner->contacts->count() }} contact(s)</td>
+                    <td class="px-6 py-4">{{ $partner->stations->count() }} station(s)</td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col gap-1">
+                            <a href="{{ route('partners.show', $partner->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">View</a>
+                            <a href="{{ route('partners.edit', $partner->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600 transition">Edit</a>
+                            @if(auth()->user() && auth()->user()->hasRole('super-admin'))
+                            <form action="{{ route('partners.destroy', $partner->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition w-full" onclick="return confirm('Are you sure you want to delete this partner?')">Delete</button>
+                            </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                        No partners found. <a href="{{ route('partners.create') }}" class="text-red-600 hover:underline">Create one now</a>
-                    </td>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">No partners found.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -106,7 +100,7 @@
 
     <!-- Pagination -->
     <div class="mt-6">
-        {{ $partners->links() }}
+        {{ $partners->appends(request()->query())->links('pagination::tailwind') }}
     </div>
 </div>
 @endsection
