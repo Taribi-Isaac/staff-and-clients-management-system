@@ -180,10 +180,10 @@ class ApLedgerController extends Controller
         });
 
         $filename = 'ap_ledger_' . date('Y-m-d_His') . '.csv';
-        $headers = [
+        $headers = array_merge([
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        ], $this->preventDownloadCachingHeaders());
 
         $callback = function() use ($exportData) {
             $file = fopen('php://output', 'w');

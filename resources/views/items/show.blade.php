@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <div class="flex justify-between items-center mb-6">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-bold">{{ $item->item_name }}</h1>
         <div class="flex gap-2">
             <a href="{{ route('items.edit', $item->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition">Edit</a>
@@ -147,7 +147,7 @@
 
     <!-- Inventory Transactions -->
     <div class="bg-white p-8 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-6">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 class="text-2xl font-semibold">Transaction History</h2>
             <a href="{{ route('inventory-transactions.create') }}?item_id={{ $item->id }}" class="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition">
                 Add Transaction
@@ -155,8 +155,8 @@
         </div>
 
         @if($item->transactions && $item->transactions->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200">
+        <div class="-mx-3 overflow-x-auto sm:mx-0">
+            <table class="min-w-[44rem] w-full border border-gray-200 text-sm sm:text-base">
                 <thead class="bg-red-600 text-white">
                     <tr>
                         <th class="px-4 py-3 text-left text-sm font-semibold">Date</th>

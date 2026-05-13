@@ -482,9 +482,12 @@ class InvoiceController extends Controller
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $filename = $invoice->invoice_number . '.pdf';
+        $filename = str_replace(["\r", "\n", '"'], '', $invoice->invoice_number . '.pdf');
 
-        return $dompdf->stream($filename);
+        return response($dompdf->output(), 200, array_merge([
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ], $this->preventDownloadCachingHeaders()));
     }
 
     /**

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <div class="flex justify-between items-center mb-6">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-bold">Transaction Details</h1>
         <div class="flex gap-2">
             <a href="{{ route('inventory-transactions.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-600 transition">Back to Transactions</a>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Finance Management</h1>
 
     <!-- Navigation Tabs -->
@@ -124,8 +124,8 @@
     </div>
 
     <!-- Transactions Table -->
-    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-        <table class="min-w-full border border-gray-200">
+    <div class="-mx-3 overflow-x-auto bg-white shadow-md sm:mx-0 rounded-lg">
+        <table class="min-w-[44rem] w-full border border-gray-200 text-sm sm:text-base">
             <thead class="bg-red-600 text-white">
                 <tr>
                     <th class="px-4 py-3 text-left font-semibold">Date</th>

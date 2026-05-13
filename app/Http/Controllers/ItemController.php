@@ -281,10 +281,10 @@ class ItemController extends Controller
     public function downloadTemplate()
     {
         $filename = 'inventory_bulk_upload_template.csv';
-        $headers = [
+        $headers = array_merge([
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        ], $this->preventDownloadCachingHeaders());
 
         $callback = function() {
             $file = fopen('php://output', 'w');

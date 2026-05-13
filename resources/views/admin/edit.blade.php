@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h2 class="text-3xl font-bold mb-6 text-center">Update Admin</h2>
 
     <form method="POST" action="{{ route('admin.update', ['admin' => $admin->id]) }}">

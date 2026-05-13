@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">{{ ucfirst($invoice->type) }} #{{ $invoice->invoice_number }}</h1>
-        <div class="flex gap-2">
-            <a href="{{ route('invoices.edit', $invoice->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition">Edit</a>
-            <a href="{{ route('invoices.duplicate', $invoice->id) }}" class="bg-purple-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-600 transition">Duplicate</a>
-            <a href="{{ route('invoices.pdf', $invoice->id) }}" class="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition">Download PDF</a>
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <h1 class="text-2xl font-bold leading-tight sm:text-3xl">{{ ucfirst($invoice->type) }} #{{ $invoice->invoice_number }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('invoices.edit', $invoice->id) }}" class="inline-flex justify-center rounded-md bg-yellow-500 px-3 py-2 text-sm text-white shadow-md transition hover:bg-yellow-600 sm:px-4">Edit</a>
+            <a href="{{ route('invoices.duplicate', $invoice->id) }}" class="inline-flex justify-center rounded-md bg-purple-500 px-3 py-2 text-sm text-white shadow-md transition hover:bg-purple-600 sm:px-4">Duplicate</a>
+            <a href="{{ route('invoices.pdf', $invoice->id) }}?v={{ $invoice->updated_at?->timestamp ?? $invoice->id }}" class="inline-flex justify-center rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow-md transition hover:bg-red-700 sm:px-4">Download PDF</a>
             @if(auth()->user()->hasRole('super-admin'))
-            <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST" class="inline-block">
+            <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST" class="inline-block w-full sm:w-auto">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 transition" onclick="return confirm('Are you sure you want to delete this invoice?')">Delete</button>
+                <button type="submit" class="w-full rounded-md bg-red-500 px-3 py-2 text-sm text-white shadow-md transition hover:bg-red-600 sm:w-auto sm:px-4" onclick="return confirm('Are you sure you want to delete this invoice?')">Delete</button>
             </form>
             @endif
         </div>
@@ -33,10 +33,10 @@
     <!-- Recurring Invoice Information -->
     @if($invoice->is_recurring)
     <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-6 rounded">
-        <div class="flex justify-between items-start">
-            <div>
+        <div class="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-start">
+            <div class="min-w-0 flex-1">
                 <h3 class="text-lg font-semibold text-indigo-800 mb-2">🔄 Recurring Invoice</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div class="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
                     <div>
                         <span class="font-semibold text-gray-700">Frequency:</span>
                         <span class="ml-2 text-gray-600 capitalize">{{ str_replace('_', ' ', $invoice->recurring_frequency ?? 'N/A') }}</span>
@@ -79,23 +79,23 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-col gap-2">
+            <div class="flex shrink-0 flex-col gap-2 sm:flex-row lg:flex-col">
                 @if(!$invoice->parent_invoice_id)
-                <form action="{{ route('invoices.toggle-recurring', $invoice->id) }}" method="POST" class="inline">
+                <form action="{{ route('invoices.toggle-recurring', $invoice->id) }}" method="POST" class="block w-full sm:inline sm:w-auto">
                     @csrf
                     @if($invoice->is_recurring_paused)
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition text-sm">
+                        <button type="submit" class="w-full rounded-md bg-green-500 px-4 py-2 text-sm text-white shadow-md transition hover:bg-green-600 sm:w-auto">
                             ▶ Resume
                         </button>
                     @else
-                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition text-sm">
+                        <button type="submit" class="w-full rounded-md bg-yellow-500 px-4 py-2 text-sm text-white shadow-md transition hover:bg-yellow-600 sm:w-auto">
                             ⏸ Pause
                         </button>
                     @endif
                 </form>
-                <form action="{{ route('invoices.generate-next', $invoice->id) }}" method="POST" class="inline">
+                <form action="{{ route('invoices.generate-next', $invoice->id) }}" method="POST" class="block w-full sm:inline sm:w-auto">
                     @csrf
-                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-indigo-600 transition text-sm" onclick="return confirm('Generate next invoice for this recurring invoice?')">
+                    <button type="submit" class="w-full rounded-md bg-indigo-500 px-4 py-2 text-sm text-white shadow-md transition hover:bg-indigo-600 sm:w-auto" onclick="return confirm('Generate next invoice for this recurring invoice?')">
                         ➕ Generate Next
                     </button>
                 </form>
@@ -106,24 +106,24 @@
     @endif
 
     <!-- Invoice Preview -->
-    <div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
         <!-- Header -->
-        <div class="flex justify-between mb-8 pb-6 border-b-2 border-red-600">
-            <div>
+        <div class="mb-8 flex flex-col gap-6 border-b-2 border-red-600 pb-6 lg:flex-row lg:justify-between">
+            <div class="min-w-0">
                 <div class="mb-4">
-                    <img src="{{ asset('images/logo.png') }}" alt="Raslordeck Limited Logo" class="h-16">
+                    <img src="{{ asset('images/logo.png') }}" alt="Raslordeck Limited Logo" class="h-14 sm:h-16">
                 </div>
-                <h2 class="text-2xl font-bold text-red-600 mb-2">Raslordeck Limited</h2>
-                <p class="text-gray-600">No 10 Ada George road, Port Harcourt.</p>
-                <p class="text-gray-600">Email: info@raslordeckltd.com</p>
-                <p class="text-gray-600">Phone: +2349131271958</p>
+                <h2 class="mb-2 text-xl font-bold text-red-600 sm:text-2xl">Raslordeck Limited</h2>
+                <p class="text-sm text-gray-600 sm:text-base">No 10 Ada George road, Port Harcourt.</p>
+                <p class="text-sm text-gray-600 sm:text-base">Email: info@raslordeckltd.com</p>
+                <p class="text-sm text-gray-600 sm:text-base">Phone: +2349131271958</p>
             </div>
-            <div class="text-right">
-                <h3 class="text-xl font-bold mb-2">{{ $invoice->title ?? ucfirst($invoice->type) }}</h3>
-                <p class="text-gray-600"><strong>{{ ucfirst($invoice->type) }} #:</strong> {{ $invoice->invoice_number }}</p>
-                <p class="text-gray-600"><strong>Date:</strong> {{ $invoice->invoice_date->format('M d, Y') }}</p>
+            <div class="min-w-0 text-left lg:text-right">
+                <h3 class="mb-2 text-lg font-bold sm:text-xl">{{ $invoice->title ?? ucfirst($invoice->type) }}</h3>
+                <p class="text-sm text-gray-600 sm:text-base"><strong>{{ ucfirst($invoice->type) }} #:</strong> {{ $invoice->invoice_number }}</p>
+                <p class="text-sm text-gray-600 sm:text-base"><strong>Date:</strong> {{ $invoice->invoice_date->format('M d, Y') }}</p>
                 @if($invoice->due_date)
-                <p class="text-gray-600"><strong>Due Date:</strong> {{ $invoice->due_date->format('M d, Y') }}</p>
+                <p class="text-sm text-gray-600 sm:text-base"><strong>Due Date:</strong> {{ $invoice->due_date->format('M d, Y') }}</p>
                 @endif
                 <p class="mt-2">
                     @php
@@ -157,23 +157,23 @@
         </div>
 
         <!-- Invoice Items -->
-        <div class="mb-8">
-            <table class="w-full border-collapse">
+        <div class="mb-8 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <table class="w-full min-w-[36rem] border-collapse text-sm sm:min-w-0 sm:text-base">
                 <thead>
                     <tr class="bg-red-600 text-white">
-                        <th class="px-4 py-3 text-left">Description</th>
-                        <th class="px-4 py-3 text-right">Quantity</th>
-                        <th class="px-4 py-3 text-right">Unit Price</th>
-                        <th class="px-4 py-3 text-right">Total</th>
+                        <th class="px-3 py-2 text-left sm:px-4 sm:py-3">Description</th>
+                        <th class="px-3 py-2 text-right sm:px-4 sm:py-3">Quantity</th>
+                        <th class="px-3 py-2 text-right sm:px-4 sm:py-3">Unit Price</th>
+                        <th class="px-3 py-2 text-right sm:px-4 sm:py-3">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($invoice->items as $item)
                     <tr class="border-b border-gray-200 hover:bg-gray-50">
-                        <td class="px-4 py-3">{{ $item->description }}</td>
-                        <td class="px-4 py-3 text-right">{{ number_format($item->quantity, 2) }}</td>
-                        <td class="px-4 py-3 text-right">₦{{ number_format($item->unit_price, 2) }}</td>
-                        <td class="px-4 py-3 text-right font-semibold">₦{{ number_format($item->total, 2) }}</td>
+                        <td class="max-w-[14rem] break-words px-3 py-2 sm:max-w-none sm:px-4 sm:py-3">{{ $item->description }}</td>
+                        <td class="whitespace-nowrap px-3 py-2 text-right sm:px-4 sm:py-3">{{ number_format($item->quantity, 2) }}</td>
+                        <td class="whitespace-nowrap px-3 py-2 text-right sm:px-4 sm:py-3">₦{{ number_format($item->unit_price, 2) }}</td>
+                        <td class="whitespace-nowrap px-3 py-2 text-right font-semibold sm:px-4 sm:py-3">₦{{ number_format($item->total, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -181,8 +181,8 @@
         </div>
 
         <!-- Totals -->
-        <div class="flex justify-end mb-8">
-            <div class="w-1/3">
+        <div class="mb-8 flex justify-stretch sm:justify-end">
+            <div class="w-full max-w-md sm:w-1/2 lg:w-1/3">
                 <div class="flex justify-between mb-2">
                     <span class="text-gray-600">Subtotal:</span>
                     <span class="font-semibold">₦{{ number_format($invoice->subtotal, 2) }}</span>
@@ -225,17 +225,17 @@
         @endif
 
         <!-- Footer -->
-        <div class="mt-8 pt-6 border-t border-gray-200 text-center text-gray-500 text-sm">
+        <div class="mt-8 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
             <p>Visit us: www.raslordeckltd.com</p>
         </div>
     </div>
 
     <!-- Child Invoices (Generated from this recurring invoice) -->
     @if($invoice->is_recurring && $invoice->childInvoices && $invoice->childInvoices->count() > 0)
-    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h2 class="text-xl font-semibold mb-4">Generated Invoices</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200">
+    <div class="mt-6 rounded-lg bg-white p-4 shadow-md sm:p-6">
+        <h2 class="mb-4 text-lg font-semibold sm:text-xl">Generated Invoices</h2>
+        <div class="-mx-3 overflow-x-auto sm:mx-0">
+            <table class="min-w-[36rem] w-full border border-gray-200 text-sm sm:text-base">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Invoice #</th>
@@ -271,10 +271,10 @@
 
     <!-- Notification History -->
     @if($invoice->is_recurring && $invoice->notifications && $invoice->notifications->count() > 0)
-    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h2 class="text-xl font-semibold mb-4">Notification History</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200">
+    <div class="mt-6 rounded-lg bg-white p-4 shadow-md sm:p-6">
+        <h2 class="mb-4 text-lg font-semibold sm:text-xl">Notification History</h2>
+        <div class="-mx-3 overflow-x-auto sm:mx-0">
+            <table class="min-w-[40rem] w-full border border-gray-200 text-sm sm:text-base">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Type</th>

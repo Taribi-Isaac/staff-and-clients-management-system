@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Edit Supplier</h1>
 
     <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="bg-white p-8 rounded-lg shadow-md">

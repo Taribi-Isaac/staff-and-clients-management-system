@@ -14,7 +14,7 @@ class PettyCashController extends Controller
     {
         $query = $request->input('search');
         $type = $request->input('type');
-        $category = $request->input('category');
+        $categorySearch = trim((string) $request->input('category', ''));
         $authorizationStatus = $request->input('authorization_status');
         $employeeFilter = $request->input('employee_filter'); // 'all', 'with_employee', 'without_employee', or specific employee_id
         $employeeId = $request->input('employee_id');
@@ -28,8 +28,8 @@ class PettyCashController extends Controller
         ->when($type, function ($q) use ($type) {
             $q->where('transaction_type', $type);
         })
-        ->when($category, function ($q) use ($category) {
-            $q->where('category', $category);
+        ->when($categorySearch !== '', function ($q) use ($categorySearch) {
+            $q->where('category', 'LIKE', '%' . $categorySearch . '%');
         })
         ->when($authorizationStatus, function ($q) use ($authorizationStatus) {
             $q->where('authorization_status', $authorizationStatus);
@@ -172,6 +172,7 @@ class PettyCashController extends Controller
     {
         $query = $request->input('search');
         $type = $request->input('type');
+        $categorySearch = trim((string) $request->input('category', ''));
         $employeeFilter = $request->input('employee_filter');
         $employeeId = $request->input('employee_id');
         $startDate = $request->input('start_date');
@@ -183,6 +184,9 @@ class PettyCashController extends Controller
         })
         ->when($type, function ($q) use ($type) {
             $q->where('transaction_type', $type);
+        })
+        ->when($categorySearch !== '', function ($q) use ($categorySearch) {
+            $q->where('category', 'LIKE', '%' . $categorySearch . '%');
         })
         ->when($employeeFilter === 'with_employee', function ($q) {
             $q->whereNotNull('employee_id');
@@ -224,10 +228,10 @@ class PettyCashController extends Controller
         });
 
         $filename = 'petty_cash_' . date('Y-m-d_His') . '.csv';
-        $headers = [
+        $headers = array_merge([
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        ], $this->preventDownloadCachingHeaders());
 
         $callback = function() use ($exportData) {
             $file = fopen('php://output', 'w');
@@ -282,6 +286,7 @@ class PettyCashController extends Controller
         
         $query = $request->input('search');
         $type = $request->input('type');
+        $categorySearch = trim((string) $request->input('category', ''));
         $authorizationStatus = $request->input('authorization_status');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
@@ -293,6 +298,9 @@ class PettyCashController extends Controller
             })
             ->when($type, function ($q) use ($type) {
                 $q->where('transaction_type', $type);
+            })
+            ->when($categorySearch !== '', function ($q) use ($categorySearch) {
+                $q->where('category', 'LIKE', '%' . $categorySearch . '%');
             })
             ->when($authorizationStatus, function ($q) use ($authorizationStatus) {
                 $q->where('authorization_status', $authorizationStatus);
@@ -331,6 +339,7 @@ class PettyCashController extends Controller
         
         $query = $request->input('search');
         $type = $request->input('type');
+        $categorySearch = trim((string) $request->input('category', ''));
         $authorizationStatus = $request->input('authorization_status');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
@@ -342,6 +351,9 @@ class PettyCashController extends Controller
             })
             ->when($type, function ($q) use ($type) {
                 $q->where('transaction_type', $type);
+            })
+            ->when($categorySearch !== '', function ($q) use ($categorySearch) {
+                $q->where('category', 'LIKE', '%' . $categorySearch . '%');
             })
             ->when($authorizationStatus, function ($q) use ($authorizationStatus) {
                 $q->where('authorization_status', $authorizationStatus);
@@ -375,10 +387,10 @@ class PettyCashController extends Controller
         });
 
         $filename = 'petty_cash_employee_' . $employee->name . '_' . date('Y-m-d_His') . '.csv';
-        $headers = [
+        $headers = array_merge([
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        ], $this->preventDownloadCachingHeaders());
 
         $callback = function() use ($exportData) {
             $file = fopen('php://output', 'w');

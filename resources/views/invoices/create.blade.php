@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <h1 class="text-3xl font-bold mb-6 text-center">Create New Invoice/Receipt/Quote</h1>
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <h1 class="mb-4 text-center text-2xl font-bold sm:mb-6 sm:text-3xl">Create New Invoice/Receipt/Quote</h1>
 
-    <form action="{{ route('invoices.store') }}" method="POST" id="invoiceForm" class="bg-white p-8 rounded-lg shadow-md">
+    <form action="{{ route('invoices.store') }}" method="POST" id="invoiceForm" class="rounded-lg bg-white p-4 shadow-md sm:p-8">
         @csrf
 
         <!-- Basic Information -->
@@ -92,31 +92,31 @@
 
         <!-- Invoice Items -->
         <div class="mb-6 border-t pt-6">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-xl font-semibold">Invoice Items</h2>
-                <button type="button" id="addItem" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Add Item</button>
+                <button type="button" id="addItem" class="w-full shrink-0 rounded-md bg-red-600 px-4 py-2 text-white transition hover:bg-red-700 sm:w-auto">Add Item</button>
             </div>
             <div id="itemsContainer">
-                <div class="item-row mb-4 p-4 border border-gray-200 rounded-lg">
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-5">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
-                            <input type="text" name="items[0][description]" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Item description">
+                <div class="item-row mb-4 rounded-lg border border-gray-200 p-3 sm:p-4">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-12">
+                        <div class="sm:col-span-5">
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Description *</label>
+                            <input type="text" name="items[0][description]" required class="w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Item description">
                         </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
-                            <input type="number" name="items[0][quantity]" step="0.01" min="0.01" value="1" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 item-quantity">
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Quantity *</label>
+                            <input type="number" name="items[0][quantity]" step="0.01" min="0.01" value="1" required class="item-quantity w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500">
                         </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price *</label>
-                            <input type="number" name="items[0][unit_price]" step="0.01" min="0" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 item-price" placeholder="0.00">
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Unit Price *</label>
+                            <input type="number" name="items[0][unit_price]" step="0.01" min="0" required class="item-price w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="0.00">
                         </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Total</label>
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded bg-gray-100 item-total" readonly value="0.00">
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-sm font-medium text-gray-700">Total</label>
+                            <input type="text" class="item-total w-full rounded border border-gray-300 bg-gray-100 p-2" readonly value="0.00">
                         </div>
-                        <div class="col-span-1 flex items-end">
-                            <button type="button" class="remove-item bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition">Remove</button>
+                        <div class="flex items-end sm:col-span-1">
+                            <button type="button" class="remove-item w-full rounded bg-red-500 px-3 py-2 text-white transition hover:bg-red-600 sm:w-auto">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -239,9 +239,9 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="mt-6 text-center">
-            <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-md shadow-md hover:bg-red-700 transition text-lg font-semibold">Create Invoice</button>
-            <a href="{{ route('invoices.index') }}" class="ml-4 bg-gray-500 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-600 transition text-lg font-semibold">Cancel</a>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
+            <button type="submit" class="w-full rounded-md bg-red-600 px-8 py-3 text-lg font-semibold text-white shadow-md transition hover:bg-red-700 sm:w-auto">Create Invoice</button>
+            <a href="{{ route('invoices.index') }}" class="block w-full rounded-md bg-gray-500 px-8 py-3 text-center text-lg font-semibold text-white shadow-md transition hover:bg-gray-600 sm:w-auto">Cancel</a>
         </div>
     </form>
 </div>
@@ -267,27 +267,27 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addItem').addEventListener('click', function() {
         const container = document.getElementById('itemsContainer');
         const newItem = document.createElement('div');
-        newItem.className = 'item-row mb-4 p-4 border border-gray-200 rounded-lg';
+        newItem.className = 'item-row mb-4 rounded-lg border border-gray-200 p-3 sm:p-4';
         newItem.innerHTML = `
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-5">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
-                    <input type="text" name="items[${itemIndex}][description]" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Item description">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-12">
+                <div class="sm:col-span-5">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Description *</label>
+                    <input type="text" name="items[${itemIndex}][description]" required class="w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Item description">
                 </div>
-                <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
-                    <input type="number" name="items[${itemIndex}][quantity]" step="0.01" min="0.01" value="1" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 item-quantity">
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Quantity *</label>
+                    <input type="number" name="items[${itemIndex}][quantity]" step="0.01" min="0.01" value="1" required class="item-quantity w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500">
                 </div>
-                <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price *</label>
-                    <input type="number" name="items[${itemIndex}][unit_price]" step="0.01" min="0" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 item-price" placeholder="0.00">
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Unit Price *</label>
+                    <input type="number" name="items[${itemIndex}][unit_price]" step="0.01" min="0" required class="item-price w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="0.00">
                 </div>
-                <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Total</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded bg-gray-100 item-total" readonly value="0.00">
+                <div class="sm:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Total</label>
+                    <input type="text" class="item-total w-full rounded border border-gray-300 bg-gray-100 p-2" readonly value="0.00">
                 </div>
-                <div class="col-span-1 flex items-end">
-                    <button type="button" class="remove-item bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition">Remove</button>
+                <div class="flex items-end sm:col-span-1">
+                    <button type="button" class="remove-item w-full rounded bg-red-500 px-3 py-2 text-white transition hover:bg-red-600 sm:w-auto">Remove</button>
                 </div>
             </div>
         `;

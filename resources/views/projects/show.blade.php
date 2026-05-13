@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">{{ $project->project_name }}</h1>
-        <div class="flex gap-2">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-bold sm:text-3xl">{{ $project->project_name }}</h1>
+        <div class="flex flex-wrap gap-2">
             <a href="{{ route('projects.edit', $project->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition">Edit</a>
             @if(auth()->user()->hasRole('super-admin'))
             <form action="{{ route('projects.destroy', $project->id) }}" method="POST" class="inline-block">
@@ -23,7 +23,7 @@
     @endif
 
     <!-- Project Details -->
-    <div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="bg-white p-4 sm:p-8 rounded-lg shadow-md">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
@@ -130,9 +130,9 @@
         <!-- Budget vs Actual Cost -->
         @if($project->actual_cost)
         <div class="mt-6 p-4 rounded-lg {{ $project->actual_cost > $project->budget ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200' }}">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <span class="font-medium">Budget Variance:</span>
-                <span class="font-bold {{ $project->actual_cost > $project->budget ? 'text-red-600' : 'text-green-600' }}">
+                <span class="min-w-0 font-bold break-words {{ $project->actual_cost > $project->budget ? 'text-red-600' : 'text-green-600' }}">
                     {{ $project->actual_cost > $project->budget ? '+' : '' }}₦{{ number_format(abs($project->actual_cost - $project->budget), 2) }}
                     ({{ $project->actual_cost > $project->budget ? 'Over' : 'Under' }} budget)
                 </span>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Stations Management</h1>
 
     <!-- Navigation Tabs -->
@@ -17,8 +17,8 @@
     </div>
 
     <!-- Search and Filters -->
-    <div class="flex flex-wrap justify-between mb-6 gap-4">
-        <form action="{{ route('stations.index') }}" method="GET" class="flex gap-2 flex-wrap">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between lg:gap-4">
+        <form action="{{ route('stations.index') }}" method="GET" class="flex w-full min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch">
             <input
                 type="text"
                 name="search"
@@ -57,8 +57,8 @@
     @endif
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+    <div class="-mx-3 overflow-x-auto sm:mx-0">
+        <table class="min-w-[44rem] w-full bg-white border border-gray-200 text-sm shadow-md rounded-lg sm:text-base">
             <thead class="bg-red-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold">Station</th>

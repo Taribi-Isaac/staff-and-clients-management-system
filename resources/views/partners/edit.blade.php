@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Edit Partner</h1>
 
     <form action="{{ route('partners.update', $partner->id) }}" method="POST" class="bg-white p-8 rounded-lg shadow-md">
@@ -56,7 +56,7 @@
 
         <!-- Primary Contacts -->
         <div class="mb-6 border-b pb-6">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-xl font-semibold">Primary Contacts</h2>
                 <button type="button" id="addContact" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Add Contact</button>
             </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Inventory Management</h1>
 
     <!-- Navigation Tabs -->
@@ -44,8 +44,8 @@
     @endif
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+    <div class="-mx-3 overflow-x-auto sm:mx-0">
+        <table class="min-w-[44rem] w-full bg-white border border-gray-200 text-sm shadow-md rounded-lg sm:text-base">
             <thead class="bg-red-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold">Category Name</th>
@@ -105,7 +105,7 @@
 <!-- Create Category Modal -->
 <div id="createCategoryModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="flex justify-between items-center mb-4">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 class="text-lg font-bold">Create New Category</h3>
             <button onclick="document.getElementById('createCategoryModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,7 +152,7 @@
 <!-- Edit Category Modal -->
 <div id="editCategoryModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="flex justify-between items-center mb-4">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 class="text-lg font-bold">Edit Category</h3>
             <button onclick="document.getElementById('editCategoryModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

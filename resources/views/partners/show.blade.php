@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
-    <div class="flex justify-between items-center mb-6">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-bold">{{ $partner->name }}</h1>
         <div class="flex gap-2">
             <a href="{{ route('partners.edit', $partner->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-yellow-600 transition">Edit</a>
@@ -83,7 +83,7 @@
     <!-- Stations -->
     @if($partner->stations->count() > 0)
     <div class="bg-white p-8 rounded-lg shadow-md mb-6">
-        <div class="flex justify-between items-center mb-6">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 class="text-2xl font-semibold">Stations ({{ $partner->stations->count() }})</h2>
             <a href="{{ route('stations.index', ['partner' => $partner->id]) }}" class="text-red-600 hover:underline">View All Stations</a>
         </div>

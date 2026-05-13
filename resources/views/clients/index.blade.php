@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">All Clients</h1>
 
     <!-- Flash Messages -->
@@ -36,8 +36,8 @@
 
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+    <div class="-mx-3 overflow-x-auto sm:mx-0">
+        <table class="min-w-[44rem] w-full bg-white border border-gray-200 text-sm shadow-md rounded-lg sm:text-base">
             <thead class="bg-gray-100 border-b">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold text-gray-700">S/N</th>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <h1 class="text-3xl font-bold mb-6 text-center">Create New Task</h1>
 
     <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="bg-white p-8 rounded-lg shadow-md">
@@ -110,7 +110,7 @@
 
         <!-- Subtasks / Checklist -->
         <div class="mb-6 border-t pt-6">
-            <div class="flex justify-between items-center mb-4">
+            <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-xl font-semibold">Subtasks / Checklist</h2>
                 <button type="button" id="addSubtask" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Add Subtask</button>
             </div>

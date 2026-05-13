@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <!-- Flash Messages -->
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -105,7 +105,7 @@
 
     <!-- Subtasks / Checklist -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <div class="flex justify-between items-center mb-4">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 class="text-xl font-semibold">Subtasks / Checklist</h2>
             <button type="button" id="addSubtaskBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Add Subtask</button>
         </div>
@@ -171,7 +171,7 @@
 
     <!-- Attachments -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <div class="flex justify-between items-center mb-4">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 class="text-xl font-semibold">Attachments</h2>
             <button type="button" id="addAttachmentBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Add Attachment</button>
         </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 pb-4">
+<div class="mx-auto max-w-7xl px-3 pb-4 sm:px-5">
     <div class="mb-6">
         <a href="{{ route('petty-cash.index') }}" class="text-blue-600 hover:underline mb-4 inline-block">← Back to Petty Cash</a>
         <h1 class="text-3xl font-bold mb-2">Petty Cash Transactions for {{ $employee->name }}</h1>
@@ -26,9 +26,10 @@
     </div>
 
     <!-- Search and Filters -->
-    <div class="flex flex-wrap justify-between mb-6 gap-4">
-        <form action="{{ route('petty-cash.employee', $employee->id) }}" method="GET" class="flex gap-2 flex-wrap">
+    <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between lg:gap-4">
+        <form action="{{ route('petty-cash.employee', $employee->id) }}" method="GET" class="flex w-full min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            <input type="text" name="category" value="{{ request('category') }}" placeholder="Category contains..." class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 min-w-[12rem]">
             <select name="type" class="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
                 <option value="">All Types</option>
                 <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
@@ -45,7 +46,7 @@
             <button type="submit" class="bg-red-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-red-700 transition">Search</button>
             <a href="{{ route('petty-cash.employee', $employee->id) }}" class="bg-gray-500 text-white px-4 py-3 rounded-md shadow-md hover:bg-gray-600 transition">Clear</a>
         </form>
-        <div class="flex gap-2">
+        <div class="flex w-full flex-shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
             <a href="{{ route('petty-cash.employee.export', ['employeeId' => $employee->id] + request()->query()) }}" class="bg-green-600 text-white px-4 py-3 rounded-md shadow-md hover:bg-green-700 transition">Export CSV</a>
         </div>
     </div>
@@ -55,8 +56,8 @@
     @endif
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+    <div class="-mx-3 overflow-x-auto sm:mx-0">
+        <table class="min-w-[44rem] w-full bg-white border border-gray-200 text-sm shadow-md rounded-lg sm:text-base">
             <thead class="bg-red-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold">Date</th>

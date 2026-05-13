@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-6 py-4">
+<div class="mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-6">
     <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6">
         <h2 class="text-2xl font-bold text-center mb-6">Add New Staff</h2>
 

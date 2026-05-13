@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto py-8 px-6">
-        <h1 class="text-3xl font-bold mb-8 text-center">Dashboard Overview</h1>
+    <div class="mx-auto max-w-7xl px-3 py-6 sm:px-5 sm:py-8">
+        <h1 class="mb-6 text-center text-2xl font-bold sm:text-3xl">Dashboard Overview</h1>
 
         <!-- Summary Cards Row 1: People -->
         <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">People</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="{{ route('clients.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+            <h2 class="mb-4 text-lg font-semibold text-gray-700 sm:text-xl">People</h2>
+            <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <a href="{{ route('clients.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Total Clients</h3>
-                            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $allClients }}</p>
-                            <p class="text-xs text-gray-500 mt-1">{{ $activeClients }} active, {{ $inactiveClients }} inactive</p>
+                            <p class="mt-2 break-words text-2xl font-bold text-blue-600 sm:text-3xl">{{ $allClients }}</p>
+                            <p class="mt-1 text-xs leading-snug text-gray-500">{{ $activeClients }} active, {{ $inactiveClients }} inactive</p>
                         </div>
                         <div class="bg-blue-100 p-3 rounded-lg">
                             <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,11 +23,11 @@
                     </div>
                 </a>
 
-                <a href="{{ route('employees.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('employees.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Employees</h3>
-                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $allEmployees }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-green-600 mt-2">{{ $allEmployees }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $activeEmployees }} active</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
@@ -39,11 +39,11 @@
                 </a>
 
                 @if(auth()->user()->hasRole('super-admin'))
-                <a href="{{ route('staff.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('staff.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Staff</h3>
-                            <p class="text-3xl font-bold text-purple-600 mt-2">{{ $allStaff }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-purple-600 mt-2">{{ $allStaff }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $activeStaff }} active</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
@@ -55,11 +55,11 @@
                 </a>
                 @endif
 
-                <a href="{{ route('issues.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('issues.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Issues</h3>
-                            <p class="text-3xl font-bold text-orange-600 mt-2">{{ $allIssues }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-orange-600 mt-2">{{ $allIssues }}</p>
                         </div>
                         <div class="bg-orange-100 p-3 rounded-lg">
                             <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,13 +74,13 @@
         <!-- Summary Cards Row 2: Projects & Invoices -->
         @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
         <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Projects & Finance</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="{{ route('projects.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+            <h2 class="mb-4 text-lg font-semibold text-gray-700 sm:text-xl">Projects & Finance</h2>
+            <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <a href="{{ route('projects.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Projects</h3>
-                            <p class="text-3xl font-bold text-indigo-600 mt-2">{{ $allProjects }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-indigo-600 mt-2">{{ $allProjects }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $activeProjects }} active, {{ $completedProjects }} completed</p>
                         </div>
                         <div class="bg-indigo-100 p-3 rounded-lg">
@@ -91,11 +91,11 @@
                     </div>
                 </a>
 
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-md sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Project Budget</h3>
-                            <p class="text-3xl font-bold text-indigo-600 mt-2">₦{{ number_format($totalProjectBudget, 2) }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-indigo-600 mt-2">₦{{ number_format($totalProjectBudget, 2) }}</p>
                             <p class="text-xs text-gray-500 mt-1">Total allocated</p>
                         </div>
                         <div class="bg-indigo-100 p-3 rounded-lg">
@@ -106,11 +106,11 @@
                     </div>
                 </div>
 
-                <a href="{{ route('invoices.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('invoices.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Invoices & Receipts</h3>
-                            <p class="text-3xl font-bold text-red-600 mt-2">{{ $allInvoices }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-red-600 mt-2">{{ $allInvoices }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $totalInvoices }} invoices, {{ $totalReceipts }} receipts, {{ $totalQuotes }} quotes</p>
                         </div>
                         <div class="bg-red-100 p-3 rounded-lg">
@@ -121,11 +121,11 @@
                     </div>
                 </a>
 
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-md sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Total Revenue</h3>
-                            <p class="text-3xl font-bold text-green-600 mt-2">₦{{ number_format($totalRevenue, 2) }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-green-600 mt-2">₦{{ number_format($totalRevenue, 2) }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $paidInvoices }} paid, {{ $pendingInvoices }} pending</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
@@ -140,13 +140,13 @@
 
         <!-- Summary Cards Row 3: Inventory -->
         <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Inventory</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="{{ route('items.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+            <h2 class="mb-4 text-lg font-semibold text-gray-700 sm:text-xl">Inventory</h2>
+            <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <a href="{{ route('items.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Inventory Items</h3>
-                            <p class="text-3xl font-bold text-teal-600 mt-2">{{ $allItems }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-teal-600 mt-2">{{ $allItems }}</p>
                             <p class="text-xs text-gray-500 mt-1">{{ $lowStockItems }} low stock, {{ $outOfStockItems }} out of stock</p>
                         </div>
                         <div class="bg-teal-100 p-3 rounded-lg">
@@ -157,11 +157,11 @@
                     </div>
                 </a>
 
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-md sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Inventory Value</h3>
-                            <p class="text-3xl font-bold text-teal-600 mt-2">₦{{ number_format($totalInventoryValue, 2) }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-teal-600 mt-2">₦{{ number_format($totalInventoryValue, 2) }}</p>
                             <p class="text-xs text-gray-500 mt-1">Total stock value</p>
                         </div>
                         <div class="bg-teal-100 p-3 rounded-lg">
@@ -172,11 +172,11 @@
                     </div>
                 </div>
 
-                <a href="{{ route('suppliers.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('suppliers.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Suppliers</h3>
-                            <p class="text-3xl font-bold text-cyan-600 mt-2">{{ $totalSuppliers }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-cyan-600 mt-2">{{ $totalSuppliers }}</p>
                         </div>
                         <div class="bg-cyan-100 p-3 rounded-lg">
                             <svg class="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,11 +186,11 @@
                     </div>
                 </a>
 
-                <a href="{{ route('categories.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('categories.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Categories</h3>
-                            <p class="text-3xl font-bold text-purple-600 mt-2">{{ $totalCategories }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-purple-600 mt-2">{{ $totalCategories }}</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
                             <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,14 +204,14 @@
 
         <!-- Transactions Card -->
         <div class="mb-8">
-            <a href="{{ route('inventory-transactions.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Inventory Transactions</h3>
-                        <p class="text-2xl font-bold text-blue-600 mt-2">{{ $totalTransactions }}</p>
+            <a href="{{ route('inventory-transactions.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="min-w-0">
+                        <h3 class="text-base font-semibold text-gray-700 sm:text-lg">Inventory Transactions</h3>
+                        <p class="mt-2 break-words text-2xl font-bold text-blue-600 sm:text-3xl">{{ $totalTransactions }}</p>
                     </div>
-                    <div class="bg-blue-100 p-4 rounded-lg">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="shrink-0 self-start bg-blue-100 p-3 rounded-lg sm:self-center sm:p-4">
+                        <svg class="h-7 w-7 text-blue-600 sm:h-8 sm:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                         </svg>
                     </div>
@@ -223,13 +223,13 @@
         <!-- Finance Section -->
         @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
         <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Finance</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="{{ route('cash-book.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+            <h2 class="mb-4 text-lg font-semibold text-gray-700 sm:text-xl">Finance</h2>
+            <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <a href="{{ route('cash-book.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Cash Book</h3>
-                            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $cashBookEntries }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-blue-600 mt-2">{{ $cashBookEntries }}</p>
                             <p class="text-xs text-gray-500 mt-1">Balance: ₦{{ number_format($cashBookBalance, 2) }}</p>
                         </div>
                         <div class="bg-blue-100 p-3 rounded-lg">
@@ -240,11 +240,11 @@
                     </div>
                 </a>
 
-                <a href="{{ route('sales-book.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('sales-book.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Sales Book</h3>
-                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $salesBookEntries }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-green-600 mt-2">{{ $salesBookEntries }}</p>
                             <p class="text-xs text-gray-500 mt-1">Total: ₦{{ number_format($totalSales, 2) }}</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
@@ -255,11 +255,11 @@
                     </div>
                 </a>
 
-                <a href="{{ route('ar-ledger.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('ar-ledger.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Accounts Receivable</h3>
-                            <p class="text-3xl font-bold text-orange-600 mt-2">{{ $arLedgerEntries }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-orange-600 mt-2">{{ $arLedgerEntries }}</p>
                             <p class="text-xs text-gray-500 mt-1">Outstanding: ₦{{ number_format($totalReceivable, 2) }}</p>
                         </div>
                         <div class="bg-orange-100 p-3 rounded-lg">
@@ -270,11 +270,11 @@
                     </div>
                 </a>
 
-                <a href="{{ route('ap-ledger.index') }}" class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition">
-                    <div class="flex justify-between items-start">
-                        <div>
+                <a href="{{ route('ap-ledger.index') }}" class="block rounded-lg border border-gray-200 bg-white p-4 shadow-md transition hover:shadow-lg sm:p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-medium text-gray-500">Accounts Payable</h3>
-                            <p class="text-3xl font-bold text-red-600 mt-2">{{ $apLedgerEntries }}</p>
+                            <p class="break-words text-2xl font-bold sm:text-3xl text-red-600 mt-2">{{ $apLedgerEntries }}</p>
                             <p class="text-xs text-gray-500 mt-1">Outstanding: ₦{{ number_format($totalPayable, 2) }}</p>
                         </div>
                         <div class="bg-red-100 p-3 rounded-lg">
@@ -291,23 +291,23 @@
         <!-- Recent Activity -->
         @if(auth()->user() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
         <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Recent Activity (Last 7 Days)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border border-blue-200">
+            <h2 class="mb-4 text-lg font-semibold text-gray-700 sm:text-xl">Recent Activity (Last 7 Days)</h2>
+            <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-4 sm:p-6">
                     <h3 class="text-sm font-medium text-blue-700">New Projects</h3>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">{{ $recentProjects }}</p>
+                    <p class="break-words text-2xl font-bold sm:text-3xl text-blue-600 mt-2">{{ $recentProjects }}</p>
                 </div>
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg border border-green-200">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-4 sm:p-6">
                     <h3 class="text-sm font-medium text-green-700">New Invoices</h3>
-                    <p class="text-3xl font-bold text-green-600 mt-2">{{ $recentInvoices }}</p>
+                    <p class="break-words text-2xl font-bold sm:text-3xl text-green-600 mt-2">{{ $recentInvoices }}</p>
                 </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg border border-purple-200">
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-4 sm:p-6">
                     <h3 class="text-sm font-medium text-purple-700">New Clients</h3>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">{{ $recentClients }}</p>
+                    <p class="break-words text-2xl font-bold sm:text-3xl text-purple-600 mt-2">{{ $recentClients }}</p>
                 </div>
-                <div class="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-lg border border-teal-200">
+                <div class="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg border border-teal-200 p-4 sm:p-6">
                     <h3 class="text-sm font-medium text-teal-700">New Transactions</h3>
-                    <p class="text-3xl font-bold text-teal-600 mt-2">{{ $recentTransactions }}</p>
+                    <p class="break-words text-2xl font-bold sm:text-3xl text-teal-600 mt-2">{{ $recentTransactions }}</p>
                 </div>
             </div>
         </div>
